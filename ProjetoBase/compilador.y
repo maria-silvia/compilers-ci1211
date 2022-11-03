@@ -91,9 +91,22 @@ lista_idents: lista_idents VIRGULA IDENT
 
 comando_composto: T_BEGIN comandos T_END
 
-comandos:
+comandos: comandos comando
+        | comando
 ;
 
+comando: numero_ou_vazio comando_sem_rotulo
+;
+
+numero_ou_vazio: numero
+               |
+;
+
+comando_sem_rotulo: atribuicao
+;
+
+atribuicao:
+;
 
 %%
 
