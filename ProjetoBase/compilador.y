@@ -11,6 +11,8 @@
 #include "compilador.h"
 
 int num_vars;
+int nivel_lex = 0;
+int desloca = 0;
 
 %}
 
@@ -61,7 +63,8 @@ declara_vars: declara_vars declara_var
 declara_var : { }
               lista_id_var DOIS_PONTOS
               tipo
-              { /* AMEM */
+              { 
+                  geraCodigo (NULL, "AMEN k"); //amen parcial
               }
               PONTO_E_VIRGULA
 ;
@@ -70,8 +73,15 @@ tipo        : IDENT
 ;
 
 lista_id_var: lista_id_var VIRGULA IDENT
-              { /* insere �ltima vars na tabela de s�mbolos */ }
-            | IDENT { /* insere vars na tabela de s�mbolos */}
+              { 
+               /* insere �ltima vars na tabela de s�mbolos */ 
+              }
+            | IDENT 
+            {
+               num_vars++; 
+               desloca++; 
+               /* insere vars na tabela de s�mbolos */
+            }
 ;
 
 lista_idents: lista_idents VIRGULA IDENT
