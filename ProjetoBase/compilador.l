@@ -121,18 +121,6 @@ label   { simbolo = simb_label;
           return LABEL;
         }
 
-type    { simbolo = simb_type;
-          strncpy (token, yytext, TAM_TOKEN);
-          IMPRIME(" type ");
-          return TYPE;
-        }
-
-array   { simbolo = simb_array;
-          strncpy (token, yytext, TAM_TOKEN);
-          IMPRIME(" array ");
-          return ARRAY;
-}
-
 for     { simbolo = simb_for;
           strncpy (token, yytext, TAM_TOKEN);
           IMPRIME(" for ");

@@ -18,7 +18,7 @@ int num_vars;
 %token VIRGULA PONTO_E_VIRGULA DOIS_PONTOS PONTO
 %token T_BEGIN T_END VAR IDENT ATRIBUICAO
 
-%token LABEL TYPE ARRAY FOR PROCEDURE FUNCTION
+%token LABEL FOR PROCEDURE FUNCTION
 %token GOTO IF THEN ELSE WHILE DO OR ASTERISCO
 %token DIVISAO AND NOT
 
@@ -30,6 +30,7 @@ programa    :{
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
+             //finalizaCompilador();
              geraCodigo (NULL, "PARA");
              }
 ;
