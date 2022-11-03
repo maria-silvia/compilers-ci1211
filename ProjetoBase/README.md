@@ -18,6 +18,7 @@
 - compilador.tab.h - header do lex.yy.c
 - compilador.output - automato legivel
 
+> compilar o lex.yy.c e compilador.tab.c juntos para gerar o executavel final
 
 ### 1. Adição de todos os tokens para Pascal
 
