@@ -105,8 +105,10 @@ numero_ou_vazio: numero
 comando_sem_rotulo: atribuicao
 ;
 
-atribuicao:
+atribuicao: IDENT ATRIBUICAO expressao
 ;
+
+expressao:
 
 %%
 
