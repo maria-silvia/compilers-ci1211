@@ -5,6 +5,9 @@
  *               Data: 08/2007
  *      Atualizado em: [09/08/2020, 19h:01m]
  *
+ *              Autor: Maria Ruy
+ *               Data: 10/2022
+ *
  * -------------------------------------------------------------------
  *
  * Tipos, protótipos e variáveis globais do compilador (via extern)
@@ -39,4 +42,4 @@ extern int nl;
 
 void geraCodigo (char*, char*);
 int yylex();
-void yyerror(const char *s);
+void yyerror(char *s);

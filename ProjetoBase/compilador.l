@@ -6,6 +6,8 @@
  *               Data: 08/2007
  *      Atualizado em: [09/08/2020, 19h:01m]
  *
+ *              Autor: Maria Silvia Ruy
+ *               Data: 10/2022
  * -------------------------------------------------------------------
  *
  * Tipos, protótipos e variáveis globais do compilador (via extern)

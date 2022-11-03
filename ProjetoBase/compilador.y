@@ -83,8 +83,8 @@ comandos:
 %%
 
 void yyerror(char *s) {
-   fprintf(stderr, "%s\n", s)
-   return 0;
+   fprintf(stderr, "%s\n", s);
+   // return 0;
 }
 
 int main (int argc, char** argv) {
