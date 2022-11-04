@@ -11,8 +11,6 @@
 #include "compilador.h"
 
 int num_vars;
-int nivel_lex = 0;
-int desloca = 0;
 
 %}
 
@@ -75,12 +73,12 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
+               ts_insere()
               }
             | IDENT 
             {
-               num_vars++; 
-               desloca++; 
                /* insere vars na tabela de s�mbolos */
+               ts_insere()
             }
 ;
 
@@ -95,12 +93,14 @@ comandos: comandos comando
         | comando
 ;
 
-comando: numero_ou_vazio comando_sem_rotulo
+comando: comando_sem_rotulo
+        |
+// comando: numero_ou_vazio comando_sem_rotulo
 ;
 
-numero_ou_vazio: numero
-               |
-;
+//numero_ou_vazio: numero
+//               |
+//;
 
 comando_sem_rotulo: atribuicao
 ;
@@ -136,9 +136,10 @@ int main (int argc, char** argv) {
 /* -------------------------------------------------------------------
  *  Inicia a Tabela de S�mbolos
  * ------------------------------------------------------------------- */
-
+   ts_inicia();
    yyin=fp;
    yyparse();
 
    return 0;
 }
+

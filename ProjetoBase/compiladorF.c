@@ -43,3 +43,39 @@ int imprimeErro ( char* erro ) {
   fprintf (stderr, "Erro na linha %d - %s\n", nl, erro);
   exit(-1);
 }
+
+
+/* -------------------------------------------------------------------
+ *  PILHA para TABELA DE SIMBOLOS
+ * ------------------------------------------------------------------- */
+struct TipoEntradaTS{
+  string nome_simbolo;
+  int nivel_lexico;
+  int tipo; // enum?
+  int deslocamento;
+  struct TipoEntradaTS *prox;
+}; 
+
+
+typedef struct {
+  int tamanho;
+  struct TipoEntradaTS *topo;
+}TipoTS;
+
+void ts_inicia(TipoEntradaTS *TS) {
+  TS->topo = (struct TipoEntradaTS *) malloc (sizeof (struct TipoEntradaTS));
+  TS->topo->prox = NULL;
+  TS->tamanho=0;
+}
+// https://gitlab.com/maria_silvia/alg2_ci056/-/blob/master/duracell_dinamica.c
+void ts_insere(string ident, atributos) {
+   
+}
+
+void ts_busca(string ident) {
+   
+}
+
+void ts_retira(int n) {
+   
+}
