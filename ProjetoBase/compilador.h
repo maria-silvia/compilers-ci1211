@@ -47,3 +47,36 @@ extern int nl;
 void geraCodigo (char*, char*);
 int yylex();
 void yyerror(char *s);
+
+
+/* -------------------------------------------------------------------
+ *  PILHA para TABELA DE SIMBOLOS
+ * ------------------------------------------------------------------- */
+
+typedef enum
+{
+    INT,
+    BOOL
+} tipo_t;
+
+typedef struct Simbolo_t {
+  char* nome;
+  int nivel_lexico;
+  int deslocamento;
+  tipo_t tipo; 
+  int valor;
+  struct Simbolo_t *prox;
+} Simbolo_t; 
+
+typedef struct {
+  int tamanho;
+  struct Simbolo_t *topo;
+} TabelaDeSimbolos_t;
+
+void ts_inicia(TabelaDeSimbolos_t *TS);
+
+void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int valor, tipo_t tipo);
+
+Simbolo_t* ts_busca(TabelaDeSimbolos_t *TS, char* nome);
+
+void ts_retira(TabelaDeSimbolos_t *TS, int n);

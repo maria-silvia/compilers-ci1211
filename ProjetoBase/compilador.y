@@ -73,12 +73,12 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere()
+               // ts_insere()
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere()
+               // ts_insere()
             }
 ;
 
@@ -136,7 +136,8 @@ int main (int argc, char** argv) {
 /* -------------------------------------------------------------------
  *  Inicia a Tabela de S�mbolos
  * ------------------------------------------------------------------- */
-   ts_inicia();
+   TabelaDeSimbolos_t TS;
+   ts_inicia(&TS);
    yyin=fp;
    yyparse();
 

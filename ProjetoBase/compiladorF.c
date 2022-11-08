@@ -49,26 +49,6 @@ int imprimeErro ( char* erro ) {
  *  PILHA para TABELA DE SIMBOLOS
  * ------------------------------------------------------------------- */
 
-typedef enum
-{
-    INT,
-    BOOL
-} tipo_t;
-
-typedef struct Simbolo_t {
-  char* nome;
-  int nivel_lexico;
-  int deslocamento;
-  tipo_t tipo; 
-  int valor;
-  struct Simbolo_t *prox;
-} Simbolo_t; 
-
-typedef struct {
-  int tamanho;
-  struct Simbolo_t *topo;
-} TabelaDeSimbolos_t;
-
 void ts_inicia(TabelaDeSimbolos_t *TS) {
   TS->topo = (struct Simbolo_t *) malloc (sizeof (struct Simbolo_t));
   TS->topo->prox = NULL;
