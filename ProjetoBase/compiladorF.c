@@ -56,7 +56,7 @@ typedef enum
 } tipo_t;
 
 typedef struct Simbolo_t {
-  char* nome_simbolo;
+  char* nome;
   int nivel_lexico;
   int deslocamento;
   tipo_t tipo; 
@@ -75,23 +75,23 @@ void ts_inicia(TabelaDeSimbolos_t *TS) {
   TS->tamanho=0;
 }
 
-void ts_insere(TabelaDeSimbolos_t TS, char* nome, int valor, tipo_t tipo) {
+void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int valor, tipo_t tipo) {
 
-    TS->topo->nome_simbolo = nome;
+    TS->topo->nome = nome;
     TS->topo->valor = valor;
     TS->topo->tipo = tipo;
     // TS->topo->nivel_lexico ;
     // TS->topo->deslocamento ;
 
-   	struct Simbolo_t *aux;
+   	Simbolo_t *aux;
 	  aux = (struct Simbolo_t *) malloc (sizeof ( struct Simbolo_t) );
 	  aux->prox = TS->topo; 
     TS->topo = aux;
 	  TS->tamanho++;
 }
 
-Simbolo_t ts_busca(TabelaDeSimbolos_t TS, char* nome) {
-    Simbolo_t simbolo = TS->topo->prox; 
+Simbolo_t* ts_busca(TabelaDeSimbolos_t *TS, char* nome) {
+    Simbolo_t *simbolo = TS->topo->prox; 
     while (simbolo->nome != nome && simbolo != NULL)
     {
       simbolo = simbolo->prox;
@@ -99,20 +99,22 @@ Simbolo_t ts_busca(TabelaDeSimbolos_t TS, char* nome) {
     return simbolo;
 }
 
-void ts_retira(TabelaDeSimbolos_t TS, int n) {
+void ts_retira(TabelaDeSimbolos_t *TS, int n) {
     if (TS->tamanho < n)
     {
-      fprintf (stderr, "ts_retira: n maior que o tamanho da TS\n";
+      fprintf (stderr, "ts_retira: n maior que o tamanho da TS\n");
       return;
     }
 
-    Simbolo_t simbolo = TS->topo; 
-    int conta = 0;
-    while (conta != n)
+    Simbolo_t *simbolo = TS->topo; 
+    Simbolo_t *aux;   
+    int novo_tam = TS->tamanho - n;
+    while (TS->tamanho != novo_tam)
     {
-      simbolo = simbolo->prox;
-      conta++;
+      aux = simbolo->prox;
+      free(simbolo);
+      simbolo = aux;
+      TS->tamanho--;
     }
     TS->topo = simbolo;
-    TS->tamanho = TS->tamanho - n;
 }
