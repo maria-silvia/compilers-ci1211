@@ -48,32 +48,58 @@ int imprimeErro ( char* erro ) {
 /* -------------------------------------------------------------------
  *  PILHA para TABELA DE SIMBOLOS
  * ------------------------------------------------------------------- */
-struct TipoEntradaTS{
-  string nome_simbolo;
-  int nivel_lexico;
-  int tipo; // enum?
-  int deslocamento;
-  struct TipoEntradaTS *prox;
-}; 
 
+typedef enum
+{
+    INT,
+    BOOL
+} tipo_t;
+
+//diferenca declarar struct simbolo_t, sem typedef?
+// https://stackoverflow.com/questions/4698600/whats-the-syntactically-proper-way-to-declare-a-c-struct/4698618#4698618
+typedef struct {
+  char* nome_simbolo;
+  int nivel_lexico;
+  int deslocamento;
+  tipo_t tipo; 
+  int valor;
+  struct simbolo_t *prox;
+} simbolo_t; 
 
 typedef struct {
   int tamanho;
-  struct TipoEntradaTS *topo;
-}TipoTS;
+  struct simbolo_t *topo;
+} tabela_de_simbolos_t;
 
-void ts_inicia(TipoEntradaTS *TS) {
-  TS->topo = (struct TipoEntradaTS *) malloc (sizeof (struct TipoEntradaTS));
+void ts_inicia(tabela_de_simbolos_t *TS) {
+  TS->topo = (struct simbolo_t *) malloc (sizeof (struct simbolo_t));
   TS->topo->prox = NULL;
   TS->tamanho=0;
 }
-// https://gitlab.com/maria_silvia/alg2_ci056/-/blob/master/duracell_dinamica.c
-void ts_insere(string ident, atributos) {
-   
+
+void ts_insere(tabela_de_simbolos_t TS, char* nome, int valor, tipo_t tipo) {
+   	struct simbolo_t *aux;
+
+	  aux = (struct simbolo_t *) malloc (sizeof ( struct simbolo_t) );
+	  aux->prox = TS->topo; 
+
+	  TS->topo->nome_simbolo = nome;
+	  TS->topo->valor = valor;
+	  TS->topo->tipo = tipo;
+	  // TS->topo->nivel_lexico ;
+	  // TS->topo->deslocamento ;
+	  
+    TS->topo = aux;
+	  TS->tamanho++;
 }
 
-void ts_busca(string ident) {
-   
+void ts_busca(tabela_de_simbolos_t TS, char* nome) {
+    simbolo_t simbolo = TS->topo->prox; // meu topo tem coisa?
+    while (simbolo->nome != nome && simbolo != NULL)
+    {
+      simbolo = simbolo->prox;
+    }
+    return simbolo;
 }
 
 void ts_retira(int n) {
