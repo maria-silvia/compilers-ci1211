@@ -55,46 +55,43 @@ typedef enum
     BOOL
 } tipo_t;
 
-//diferenca declarar struct simbolo_t, sem typedef?
-// https://stackoverflow.com/questions/4698600/whats-the-syntactically-proper-way-to-declare-a-c-struct/4698618#4698618
-typedef struct {
+typedef struct Simbolo_t {
   char* nome_simbolo;
   int nivel_lexico;
   int deslocamento;
   tipo_t tipo; 
   int valor;
-  struct simbolo_t *prox;
-} simbolo_t; 
+  struct Simbolo_t *prox;
+} Simbolo_t; 
 
 typedef struct {
   int tamanho;
-  struct simbolo_t *topo;
-} tabela_de_simbolos_t;
+  struct Simbolo_t *topo;
+} TabelaDeSimbolos_t;
 
-void ts_inicia(tabela_de_simbolos_t *TS) {
-  TS->topo = (struct simbolo_t *) malloc (sizeof (struct simbolo_t));
+void ts_inicia(TabelaDeSimbolos_t *TS) {
+  TS->topo = (struct Simbolo_t *) malloc (sizeof (struct Simbolo_t));
   TS->topo->prox = NULL;
   TS->tamanho=0;
 }
 
-void ts_insere(tabela_de_simbolos_t TS, char* nome, int valor, tipo_t tipo) {
-   	struct simbolo_t *aux;
+void ts_insere(TabelaDeSimbolos_t TS, char* nome, int valor, tipo_t tipo) {
 
-	  aux = (struct simbolo_t *) malloc (sizeof ( struct simbolo_t) );
+    TS->topo->nome_simbolo = nome;
+    TS->topo->valor = valor;
+    TS->topo->tipo = tipo;
+    // TS->topo->nivel_lexico ;
+    // TS->topo->deslocamento ;
+
+   	struct Simbolo_t *aux;
+	  aux = (struct Simbolo_t *) malloc (sizeof ( struct Simbolo_t) );
 	  aux->prox = TS->topo; 
-
-	  TS->topo->nome_simbolo = nome;
-	  TS->topo->valor = valor;
-	  TS->topo->tipo = tipo;
-	  // TS->topo->nivel_lexico ;
-	  // TS->topo->deslocamento ;
-	  
     TS->topo = aux;
 	  TS->tamanho++;
 }
 
-void ts_busca(tabela_de_simbolos_t TS, char* nome) {
-    simbolo_t simbolo = TS->topo->prox; // meu topo tem coisa?
+Simbolo_t ts_busca(TabelaDeSimbolos_t TS, char* nome) {
+    Simbolo_t simbolo = TS->topo->prox; 
     while (simbolo->nome != nome && simbolo != NULL)
     {
       simbolo = simbolo->prox;
@@ -102,6 +99,20 @@ void ts_busca(tabela_de_simbolos_t TS, char* nome) {
     return simbolo;
 }
 
-void ts_retira(int n) {
-   
+void ts_retira(TabelaDeSimbolos_t TS, int n) {
+    if (TS->tamanho < n)
+    {
+      fprintf (stderr, "ts_retira: n maior que o tamanho da TS\n";
+      return;
+    }
+
+    Simbolo_t simbolo = TS->topo; 
+    int conta = 0;
+    while (conta != n)
+    {
+      simbolo = simbolo->prox;
+      conta++;
+    }
+    TS->topo = simbolo;
+    TS->tamanho = TS->tamanho - n;
 }
