@@ -55,19 +55,29 @@ void ts_inicia(TabelaDeSimbolos_t *TS) {
   TS->tamanho=0;
 }
 
-void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int valor, tipo_t tipo) {
-
+void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int nl, int deslocamento, categoria_t categoria) {
     TS->topo->nome = nome;
-    TS->topo->valor = valor;
-    TS->topo->tipo = tipo;
-    // TS->topo->nivel_lexico ;
-    // TS->topo->deslocamento ;
+    TS->topo->categoria = categoria;
+    
+    TS->topo->nivel_lexico = nl ;
+    TS->topo->deslocamento = deslocamento;
 
    	Simbolo_t *aux;
 	  aux = (struct Simbolo_t *) malloc (sizeof ( struct Simbolo_t) );
 	  aux->prox = TS->topo; 
     TS->topo = aux;
 	  TS->tamanho++;
+}
+
+void ts_insere_tipo(TabelaDeSimbolos_t *TS, int quantidade, tipo_t tipo) {
+    int conta = 0;
+    Simbolo_t *simbolo = TS->topo->prox; 
+    while (conta != quantidade)
+    {
+      simbolo->tipo = tipo;
+      simbolo = simbolo->prox;
+      conta++;
+    }
 }
 
 Simbolo_t* ts_busca(TabelaDeSimbolos_t *TS, char* nome) {

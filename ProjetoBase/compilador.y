@@ -10,7 +10,9 @@
 #include <string.h>
 #include "compilador.h"
 
-int num_vars;
+int num_vars; // deslocamento
+int nivel_lexico = 0;
+TabelaDeSimbolos_t TS;  
 
 %}
 
@@ -25,13 +27,13 @@ int num_vars;
 %%
 
 programa    :{
-             geraCodigo (NULL, "INPP");
+               geraCodigo (NULL, "INPP");
              }
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
-             //finalizaCompilador();
-             geraCodigo (NULL, "PARA");
+               //finalizaCompilador();
+               geraCodigo (NULL, "PARA");
              }
 ;
 
@@ -62,7 +64,9 @@ declara_var : { }
               lista_id_var DOIS_PONTOS
               tipo
               { 
-                  geraCodigo (NULL, "AMEN k"); //amen parcial
+                  ts_insere_tipo(&TS, num_vars, $3);
+                  geraCodigo (NULL, "AMEN num_vars"); //amen parcial
+                  num_vars=0;
               }
               PONTO_E_VIRGULA
 ;
@@ -73,12 +77,14 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               // ts_insere()
+               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VariavelSimples);
+               num_vars++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               // ts_insere()
+               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VariavelSimples);
+               num_vars++;
             }
 ;
 
@@ -136,7 +142,6 @@ int main (int argc, char** argv) {
 /* -------------------------------------------------------------------
  *  Inicia a Tabela de S�mbolos
  * ------------------------------------------------------------------- */
-   TabelaDeSimbolos_t TS;
    ts_inicia(&TS);
    yyin=fp;
    yyparse();

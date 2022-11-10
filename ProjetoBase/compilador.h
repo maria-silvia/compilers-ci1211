@@ -52,19 +52,27 @@ void yyerror(char *s);
 /* -------------------------------------------------------------------
  *  PILHA para TABELA DE SIMBOLOS
  * ------------------------------------------------------------------- */
+typedef enum
+{
+    Inteiro,
+    Booleano
+} tipo_t;
 
 typedef enum
 {
-    INT,
-    BOOL
-} tipo_t;
+    VariavelSimples,
+    Procedimento,
+    Funcao,
+    ParametroFormal,
+    Rotulo
+} categoria_t;
 
 typedef struct Simbolo_t {
   char* nome;
+  tipo_t tipo;
+  categoria_t categoria; 
   int nivel_lexico;
   int deslocamento;
-  tipo_t tipo; 
-  int valor;
   struct Simbolo_t *prox;
 } Simbolo_t; 
 
@@ -75,7 +83,9 @@ typedef struct {
 
 void ts_inicia(TabelaDeSimbolos_t *TS);
 
-void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int valor, tipo_t tipo);
+void ts_insere(TabelaDeSimbolos_t *TS, char* nome, int nl, int deslocamento, categoria_t categoria);
+
+void ts_insere_tipo(TabelaDeSimbolos_t *TS, int quantidade, tipo_t tipo);
 
 Simbolo_t* ts_busca(TabelaDeSimbolos_t *TS, char* nome);
 
