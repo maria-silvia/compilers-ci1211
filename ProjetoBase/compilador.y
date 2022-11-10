@@ -27,13 +27,13 @@ TabelaDeSimbolos_t TS;
 %%
 
 programa    :{
-               geraCodigo (NULL, "INPP");
+               geraCodigo (NULL, "INPP", 0);
              }
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
                //finalizaCompilador();
-               geraCodigo (NULL, "PARA");
+               geraCodigo (NULL, "PARA", 0);
              }
 ;
 
@@ -65,7 +65,7 @@ declara_var : { }
               tipo
               { 
                   ts_insere_tipo(&TS, num_vars, $3);
-                  geraCodigo (NULL, "AMEN num_vars"); //amen parcial
+                  geraCodigo (NULL, "AMEN", num_vars); //amen parcial
                   num_vars=0;
               }
               PONTO_E_VIRGULA

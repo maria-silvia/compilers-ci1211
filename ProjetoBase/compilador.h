@@ -44,7 +44,7 @@ extern int nl;
  * prototipos globais
  * ------------------------------------------------------------------- */
 
-void geraCodigo (char*, char*);
+void geraCodigo (char*, char*, int k);
 int yylex();
 void yyerror(char *s);
 
