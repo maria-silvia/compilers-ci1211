@@ -60,11 +60,11 @@ typedef enum
 
 typedef enum
 {
-    VariavelSimples,
-    Procedimento,
-    Funcao,
+    VS,
+    PROC,
+    FUNC,
     ParametroFormal,
-    Rotulo
+    ROT
 } categoria_t;
 
 typedef struct Simbolo_t {
