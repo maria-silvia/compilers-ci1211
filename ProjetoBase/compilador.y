@@ -10,8 +10,10 @@
 #include <string.h>
 #include "compilador.h"
 
-int num_vars; // deslocamento
-int nivel_lexico = 0;
+int num_vars;
+int nivel_lexico;
+int desloc;
+
 TabelaDeSimbolos_t TS;  
 
 %}
@@ -27,13 +29,13 @@ TabelaDeSimbolos_t TS;
 %%
 
 programa    :{
-               geraCodigo (NULL, "INPP", 0);
+               geraCodigo (NULL, "INPP");
              }
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
                //finalizaCompilador();
-               geraCodigo (NULL, "PARA", 0);
+               geraCodigo (NULL, "PARA");
              }
 ;
 
@@ -65,7 +67,11 @@ declara_var : { }
               tipo
               { 
                   ts_insere_tipo(&TS, num_vars, $3);
-                  geraCodigo (NULL, "AMEN", num_vars); //amen parcial
+                  char amemk[10] = "AMEM ";
+                  char aux_s[5];
+                  sprintf(aux_s, "%d", num_vars);
+                  strcat(amemk, aux_s);
+                  geraCodigo (NULL, amemk); //amem parcial
                   num_vars=0;
               }
               PONTO_E_VIRGULA
@@ -77,13 +83,13 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VariavelSimples);
+               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VS);
                num_vars++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VariavelSimples);
+               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VS);
                num_vars++;
             }
 ;

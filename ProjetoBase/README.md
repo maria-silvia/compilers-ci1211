@@ -1,5 +1,43 @@
 # Trabalho compiladores
 
+#### to do
+ - [ ] Pilha genérica       //Arthur
+ - [ ] Tabela simbolos      //Arthur
+ - [X] AMEN k
+ - [ ] ser capaz de traduzir varGlobais.pas             //aula 6
+ - [ ] ser capaz de traduzir varGlobaisInvalido.pas     //aula 7
+
+ - [ ] regras 25 a 30
+ - [ ] while    //aula 8
+ - [ ] if       //aula 9
+
+
+ - [ ] procedimentos //aula 10+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_____
+
+
+
+
+
+
+
 - compiladorF.c ??????
 
 #### Flex
