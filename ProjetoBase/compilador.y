@@ -24,7 +24,7 @@ TabelaDeSimbolos_t TS;
 
 %token LABEL FOR PROCEDURE FUNCTION
 %token GOTO IF THEN ELSE WHILE DO OR ASTERISCO
-%token DIVISAO AND NOT
+%token DIVISAO AND NOT NUMERO
 
 %%
 
@@ -107,20 +107,32 @@ comandos: comandos comando
 
 comando: comando_sem_rotulo
         |
-// comando: numero_ou_vazio comando_sem_rotulo
 ;
-
-//numero_ou_vazio: numero
-//               |
-//;
 
 comando_sem_rotulo: atribuicao
 ;
 
-atribuicao: IDENT ATRIBUICAO expressao
+atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
 ;
 
-expressao:
+expressao: expressao_simples
+;
+
+expressao_simples: termo
+;
+
+termo: fator
+;
+
+fator: NUMERO 
+      { 
+         char crctnum[10] = "CRCT ";
+         char aux_s[5];
+         sprintf(aux_s, "%d", token[$1]);
+         strcat(crctnum, aux_s);
+         geraCodigo(NULL, crctnum);
+      }
+;
 
 %%
 

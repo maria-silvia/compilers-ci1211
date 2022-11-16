@@ -211,4 +211,11 @@ not { simbolo = simb_not;
           return IDENT;
         }
 
+
+{numero} { simbolo = simb_identificador;
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" numero  ");
+          return NUMERO;
+        }
+
 %%
