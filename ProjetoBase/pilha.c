@@ -59,13 +59,11 @@ void *busca(stack_t *s, int igual(void *, void *), void *elem) {
 
     }
 
-    void *aux = NULL;
-
     for (int i=s->tam-1; i>=0; i--) {
         if (igual(s->p[i], elem)) {
-            aux = s->p[i];
+            return s->p[i];
         }
     }
 
-    return aux;
+    return NULL;
 }
