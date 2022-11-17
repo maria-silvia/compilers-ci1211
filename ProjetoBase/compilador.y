@@ -121,6 +121,7 @@ comando: comando_sem_rotulo
 ;
 
 comando_sem_rotulo: atribuicao
+                  | cmd_repetitivo
 ;
 
 atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
@@ -132,6 +133,21 @@ atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
                // strcat(armazena, endereco);
                // geraCodigo (NULL, armazena); 
             }
+;
+
+cmd_repetitivo: WHILE
+               {
+                  geraCodigo ("R00", "NADA"); 
+               }
+                expressao 
+               {
+                  geraCodigo (NULL, "DVSF R01"); 
+               }
+                DO comando_sem_rotulo
+               {
+                  geraCodigo (NULL, "DVSS R00"); 
+                  geraCodigo ("R01", "NADA"); 
+               }
 ;
 
 expressao: expressao_simples

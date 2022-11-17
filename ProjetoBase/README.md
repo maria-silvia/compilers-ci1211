@@ -27,11 +27,10 @@ Nas demais, usa-se as construções (como pilha ou $$).
 - [ ] CMIG
 - [ ] CMMA, CMME, CMDG, CONJ (and)
 
-
-
 ### aual 8  e 9
- - [ ] while   
- - [ ] if      
+ - [ ] while  
+ - [ ] if
+ - [ ] pilha de rotulos (padrao Rdd)
 
  - [ ] procedimentos //aula 10+
 
