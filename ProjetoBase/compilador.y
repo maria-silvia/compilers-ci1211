@@ -122,6 +122,7 @@ comando: comando_sem_rotulo
 
 comando_sem_rotulo: atribuicao
                   | cmd_repetitivo
+                  | cmd_condicional
 ;
 
 atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
@@ -150,6 +151,13 @@ cmd_repetitivo: WHILE
                   geraCodigo ("R01", "NADA");
                   // desempilhar os dois rotulos
                }
+;
+
+cmd_condicional:  IF expressao
+                  THEN expressao
+                  | IF expressao
+                  THEN expressao
+                  ELSE expressao
 ;
 
 expressao: expressao_simples
