@@ -26,17 +26,23 @@ Nas demais, usa-se as construções (como pilha ou $$).
 ##### exp. booleanas (regras 25 e 26)
 - [ ] CMIG
 - [ ] CMMA, CMME, CMDG, CONJ (and)
+- [ ] DIVI, SOMA
+
 
 ### aual 8  e 9
  - [ ] while  
  - [ ] if
- - [ ] subrotina gerado do proximo rotulo
+ - [ ] subrotina geradora do proximo rotulo
  - [ ] pilha de rotulos (padrao Rdd)
 
  - [ ] while aninhados, nao confundir rotulos
+ 
+ - [ ] LEIT, IMPR
+ - [ ] CRVL
 
 
- - [ ] procedimentos //aula 10+
+### aula 10
+ - [ ] procedimentos 
 
 
 

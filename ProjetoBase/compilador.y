@@ -26,6 +26,9 @@ TabelaDeSimbolos_t TS;
 %token GOTO IF THEN ELSE WHILE DO OR ASTERISCO
 %token DIVISAO AND NOT NUMERO
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 %%
 
 programa    :{
@@ -130,9 +133,9 @@ atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
                // char endereco[10];
                // ts_busca(token);
 
-               // char armazena[10] = "ARMZ ";
+               char armazena[10] = "ARMZ ";
                // strcat(armazena, endereco);
-               // geraCodigo (NULL, armazena); 
+               geraCodigo (NULL, armazena); 
             }
 ;
 
@@ -145,7 +148,7 @@ cmd_repetitivo: WHILE
                {
                   geraCodigo (NULL, "DVSF R01"); 
                }
-                DO BEGIN comando_composto
+                DO comando_composto
                {
                   geraCodigo (NULL, "DVSS R00"); 
                   geraCodigo ("R01", "NADA");
@@ -153,11 +156,23 @@ cmd_repetitivo: WHILE
                }
 ;
 
-cmd_condicional:  IF expressao
-                  THEN expressao
-                  | IF expressao
-                  THEN expressao
-                  ELSE expressao
+cmd_condicional:  if_then cond_else 
+                  { 
+                    em_if_finaliza (); 
+                  }
+;
+
+if_then     : IF expressao 
+            {
+              em_if_apos_expr ();
+            }
+             THEN comando_sem_rotulo
+            {
+              em_if_apos_then ();
+            }
+;
+cond_else   : ELSE comando_sem_rotulo
+            | %prec LOWER_THAN_ELSE
 ;
 
 expressao: expressao_simples
