@@ -30,7 +30,11 @@ Nas demais, usa-se as construções (como pilha ou $$).
 ### aual 8  e 9
  - [ ] while  
  - [ ] if
+ - [ ] subrotina gerado do proximo rotulo
  - [ ] pilha de rotulos (padrao Rdd)
+
+ - [ ] while aninhados, nao confundir rotulos
+
 
  - [ ] procedimentos //aula 10+
 

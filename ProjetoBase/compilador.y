@@ -137,16 +137,18 @@ atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
 
 cmd_repetitivo: WHILE
                {
+                  // empilhar os dois rotulos
                   geraCodigo ("R00", "NADA"); 
                }
                 expressao 
                {
                   geraCodigo (NULL, "DVSF R01"); 
                }
-                DO comando_sem_rotulo
+                DO BEGIN comando_composto
                {
                   geraCodigo (NULL, "DVSS R00"); 
-                  geraCodigo ("R01", "NADA"); 
+                  geraCodigo ("R01", "NADA");
+                  // desempilhar os dois rotulos
                }
 ;
 
