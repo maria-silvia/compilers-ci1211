@@ -108,7 +108,7 @@ comando_composto: T_BEGIN comandos T_END
                      char aux_s[5];
                      sprintf(aux_s, "%d", desloc);
                      strcat(dmemk, aux_s);
-                     geraCodigo (NULL, dmemk); //amem parcial
+                     geraCodigo (NULL, dmemk); 
                      desloc = 0;
                   }
 
@@ -124,6 +124,14 @@ comando_sem_rotulo: atribuicao
 ;
 
 atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
+            {
+               // char endereco[10];
+               // ts_busca(token);
+
+               // char armazena[10] = "ARMZ ";
+               // strcat(armazena, endereco);
+               // geraCodigo (NULL, armazena); 
+            }
 ;
 
 expressao: expressao_simples
