@@ -86,18 +86,4 @@ _____
 - compilador.output - automato legivel
 
 > compilar o lex.yy.c e compilador.tab.c juntos para gerar o executavel final
-
-### 1. Adição de todos os tokens para Pascal
-
-Add em `compilador.l` na segunda parte, de regras  
-Ex para `label`:  
-```c
-{ 
-    simbolo = simb_label;
-    strncpy (token, yytext, TAM_TOKEN);
-    IMPRIME(" label ");
-    return LABEL;
-}
-```
-
-Add em `compilador.h`, no `enum simbolos` o simb usado em `compilador.l`  
+ 
