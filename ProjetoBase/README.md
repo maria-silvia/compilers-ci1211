@@ -1,19 +1,37 @@
 # Trabalho compiladores
 
-#### to do
+## to do
  - [ ] Pilha genérica       //Arthur
  - [ ] Tabela simbolos      //Arthur
- - [X] AMEN k
- - [ ] ser capaz de traduzir varGlobais.pas             //aula 6
-    - [x] CRCT
-    - [ ] ARMZ
-    - [X] DMEM
- - [ ] ser capaz de traduzir varGlobaisInvalido.pas     //aula 7
 
- - [ ] regras 25 a 30
- - [ ] while    //aula 8
- - [ ] if       //aula 9
+### aula 6
+- [ ] ser capaz de traduzir varGlobais.pas             
+- [x] CRCT
+- [ ] ARMZ
+- [X] DMEM
+- [ ] atualizar tipo na TS
 
+Desafios:
+- [ ] não for um símbolo ∈ Variável Simples, Parâmetro formal ou Função, deve indicar erro
+- [ ] Como armazenar o elemento da esquerda para fazer a comparação com o resultado da expressão. **Sugestão**: variável global l_elem.
+ 
+### aula 7 - expressoes, verificar tipos
+- [X] AMEN k
+- [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
+- [ ] ser capaz de detectar erros erroTipo.pas    
+- [ ] regras 25 a 30
+
+Dica: a regra 30 é a única que acessa a tabela de símbolos.
+Nas demais, usa-se as construções (como pilha ou $$).
+##### exp. booleanas (regras 25 e 26)
+- [ ] CMIG
+- [ ] CMMA, CMME, CMDG, CONJ (and)
+
+
+
+### aual 8  e 9
+ - [ ] while   
+ - [ ] if      
 
  - [ ] procedimentos //aula 10+
 
@@ -41,7 +59,6 @@ _____
 
 
 
-- compiladorF.c ??????
 
 #### Flex
 - compilador.l -  definicoes, regras, subrotinas
