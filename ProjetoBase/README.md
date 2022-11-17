@@ -7,7 +7,7 @@
  - [ ] ser capaz de traduzir varGlobais.pas             //aula 6
     - [x] CRCT
     - [ ] ARMZ
-    - [ ] DMEM
+    - [X] DMEM
  - [ ] ser capaz de traduzir varGlobaisInvalido.pas     //aula 7
 
  - [ ] regras 25 a 30

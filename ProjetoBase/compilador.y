@@ -66,7 +66,7 @@ declara_var : { }
               lista_id_var DOIS_PONTOS
               tipo
               { 
-                  ts_insere_tipo(&TS, num_vars, $3);
+                  // ts_insere_tipo(&TS, token);
                   char amemk[10] = "AMEM ";
                   char aux_s[5];
                   sprintf(aux_s, "%d", num_vars);
@@ -83,14 +83,16 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VS);
+               ts_insere(&TS, token, nivel_lexico, num_vars, VS);
                num_vars++;
+               desloc++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(&TS, "exemplo", nivel_lexico, num_vars, VS);
+               ts_insere(&TS, token, nivel_lexico, num_vars, VS);
                num_vars++;
+               desloc++;
             }
 ;
 
@@ -101,8 +103,13 @@ lista_idents: lista_idents VIRGULA IDENT
 
 comando_composto: T_BEGIN comandos T_END
                   {
-                     // ts_retira(n);
-                     geraCodigo(NULL, "DMEM n");
+                     // ts_retira(desloc);
+                     char dmemk[10] = "DMEM ";
+                     char aux_s[5];
+                     sprintf(aux_s, "%d", desloc);
+                     strcat(dmemk, aux_s);
+                     geraCodigo (NULL, dmemk); //amem parcial
+                     desloc = 0;
                   }
 
 comandos: comandos comando
