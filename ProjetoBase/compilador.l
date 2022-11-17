@@ -6,7 +6,7 @@
  *               Data: 08/2007
  *      Atualizado em: [09/08/2020, 19h:01m]
  *
- *              Autor: Maria Silvia Ruy
+ *              Autor: Maria Ruy e Arthur Martinelli
  *               Data: 10/2022
  * -------------------------------------------------------------------
  *

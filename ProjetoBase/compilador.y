@@ -100,6 +100,10 @@ lista_idents: lista_idents VIRGULA IDENT
 
 
 comando_composto: T_BEGIN comandos T_END
+                  {
+                     // ts_retira(n);
+                     geraCodigo(NULL, "DMEM n");
+                  }
 
 comandos: comandos comando
         | comando
@@ -127,9 +131,7 @@ termo: fator
 fator: NUMERO 
       { 
          char crctnum[10] = "CRCT ";
-         char aux_s[5];
-         sprintf(aux_s, "%d", token[$1]);
-         strcat(crctnum, aux_s);
+         strcat(crctnum, token);
          geraCodigo(NULL, crctnum);
       }
 ;
