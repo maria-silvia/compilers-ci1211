@@ -36,6 +36,7 @@ void *pop(stack_t *s) {
 
     s->tam--;
     return s->p[s->tam];
+
 }
 
 
@@ -50,7 +51,7 @@ void print_pilha(stack_t *s, void print_elem (void*)) {
 }
 
 
-void *busca(stack_t *s, int igual(void *, void *), void *elem) {
+void *search(stack_t *s, int equal_func(void *, void *), void *elem) {
 
     if (s->tam == 0) {
 
@@ -62,7 +63,7 @@ void *busca(stack_t *s, int igual(void *, void *), void *elem) {
     void *aux = NULL;
 
     for (int i=s->tam-1; i>=0; i--) {
-        if (igual(s->p[i], elem)) {
+        if (equal_func(s->p[i], elem)) {
             aux = s->p[i];
         }
     }
