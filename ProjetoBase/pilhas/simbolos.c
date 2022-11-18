@@ -9,7 +9,7 @@ tabela_de_simbolos *init_tabela() {
 }
 
 void print_simb(void *s) {
-    printf("[ident=%s, cat=%s]", ((simb *)s)->ident, ((simb *)s)->cat);
+    printf("[ident=%s, cat=%d]", ((simb *)s)->ident, (int)*((simb *)s)->cat);
 }
 
 void print_tabela(tabela_de_simbolos *t) {
@@ -18,12 +18,17 @@ void print_tabela(tabela_de_simbolos *t) {
 
 }
 
-void insere(tabela_de_simbolos *t, char *ident, char *cat) {
+void ts_insere(tabela_de_simbolos *t, char *ident, categoria_t cat) {
 
     simb *s = (simb *)malloc(sizeof(simb));
 
-    s->ident = ident;
-    s->cat = cat;
+    //s->ident = ident;
+    //s->cat = cat;
+
+    s->ident = (char *)malloc(sizeof(char)*strlen(ident));
+    strcpy(s->ident, ident);
+    s->cat = (categoria_t *)malloc(sizeof(categoria_t));
+    *(s->cat) = cat;
 
     push(t->s, s);
 
@@ -41,7 +46,7 @@ simb *busca(tabela_de_simbolos *t, char *ident) {
     return aux;
 }
 
-void retira(tabela_de_simbolos *t, int n) {
+void ts_retira(tabela_de_simbolos *t, int n) {
 
     for (int i=0; i<n; i++)
         pop(t->s);

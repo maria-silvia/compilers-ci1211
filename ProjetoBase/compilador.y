@@ -9,12 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "compilador.h"
+#include "pilhas/simbolos.h"
 
 int num_vars;
 int nivel_lexico;
 int desloc;
 
-TabelaDeSimbolos_t TS;  
+tabela_de_simbolos *TS;
 
 %}
 
@@ -38,7 +39,10 @@ programa    :{
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
                //finalizaCompilador();
+               print_tabela(TS);
+               
                geraCodigo (NULL, "PARA");
+
              }
 ;
 
@@ -87,14 +91,14 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(&TS, token, nivel_lexico, num_vars, VS);
+               ts_insere(TS, token, VS);
                num_vars++;
                desloc++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(&TS, token, nivel_lexico, num_vars, VS);
+               ts_insere(TS, token, VS);
                num_vars++;
                desloc++;
             }
@@ -132,7 +136,7 @@ comando_sem_rotulo: atribuicao
 atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
             {
                // char endereco[10];
-               // ts_busca(token);
+               // ts_busca(TS, token);
 
                char armazena[10] = "ARMZ ";
                // strcat(armazena, endereco);
@@ -223,7 +227,7 @@ int main (int argc, char** argv) {
 /* -------------------------------------------------------------------
  *  Inicia a Tabela de S�mbolos
  * ------------------------------------------------------------------- */
-   ts_inicia(&TS);
+   TS = init_tabela();
    yyin=fp;
    yyparse();
 

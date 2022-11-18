@@ -1,8 +1,9 @@
 # Trabalho compiladores
 
 ## to do
- - [ ] Pilha genérica       //Arthur
- - [ ] Tabela simbolos      //Arthur
+ - [x] Pilha genérica       //Arthur
+ - [x] Tabela simbolos      //Arthur
+- testar retira
 
 ### aula 6
 - [ ] ser capaz de traduzir varGlobais.pas             
