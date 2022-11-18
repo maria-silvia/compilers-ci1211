@@ -60,13 +60,11 @@ void *search(stack_t *s, int equal_func(void *, void *), void *elem) {
 
     }
 
-    void *aux = NULL;
-
     for (int i=s->tam-1; i>=0; i--) {
         if (equal_func(s->p[i], elem)) {
-            aux = s->p[i];
+            return s->p[i];
         }
     }
 
-    return aux;
+    return NULL;
 }
