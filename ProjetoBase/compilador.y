@@ -48,6 +48,7 @@ bloco       :
               }
 
               comando_composto
+            | subrotinas
               ;
 
 
@@ -158,17 +159,17 @@ cmd_repetitivo: WHILE
 
 cmd_condicional:  if_then cond_else 
                   { 
-                    em_if_finaliza (); 
+                    // em_if_finaliza (); 
                   }
 ;
 
 if_then     : IF expressao 
             {
-              em_if_apos_expr ();
+              // em_if_apos_expr ();
             }
              THEN comando_sem_rotulo
             {
-              em_if_apos_then ();
+              // em_if_apos_then ();
             }
 ;
 cond_else   : ELSE comando_sem_rotulo
@@ -192,6 +193,10 @@ fator: NUMERO
       }
 ;
 
+
+subrotinas: declara_procedimento
+;
+declara_procedimento:   PROCEDURE IDENT PONTO_E_VIRGULA bloco
 %%
 
 void yyerror(char *s) {
