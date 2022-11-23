@@ -33,6 +33,7 @@ tabela_de_simbolos *TS;
 %%
 
 programa    :{
+               nivel_lexico = 0;
                geraCodigo (NULL, "INPP");
              }
              PROGRAM IDENT
@@ -49,6 +50,7 @@ programa    :{
 bloco       :
               parte_declara_vars
               {
+                desloc = 0;
               }
 
               comando_composto
@@ -75,7 +77,7 @@ declara_var : { }
               tipo
               { 
                   // ts_insere_tipo(&TS, token);
-                  char amemk[10] = "AMEM ";
+                  char amemk[20] = "AMEM ";
                   char aux_s[5];
                   sprintf(aux_s, "%d", num_vars);
                   strcat(amemk, aux_s);
@@ -91,14 +93,14 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(TS, token, VS);
+               ts_insere(TS, token, VS, nivel_lexico, desloc);
                num_vars++;
                desloc++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(TS, token, VS);
+               ts_insere(TS, token, VS, nivel_lexico, desloc);
                num_vars++;
                desloc++;
             }
@@ -112,12 +114,11 @@ lista_idents: lista_idents VIRGULA IDENT
 comando_composto: T_BEGIN comandos T_END
                   {
                      // ts_retira(desloc);
-                     char dmemk[10] = "DMEM ";
+                     char dmemk[20] = "DMEM ";
                      char aux_s[5];
                      sprintf(aux_s, "%d", desloc);
                      strcat(dmemk, aux_s);
                      geraCodigo (NULL, dmemk); 
-                     desloc = 0;
                   }
 
 comandos: comandos comando
@@ -133,15 +134,23 @@ comando_sem_rotulo: atribuicao
                   | cmd_condicional
 ;
 
-atribuicao: IDENT ATRIBUICAO expressao PONTO_E_VIRGULA
+atribuicao: IDENT 
             {
-               // char endereco[10];
-               // ts_busca(TS, token);
 
-               char armazena[10] = "ARMZ ";
-               // strcat(armazena, endereco);
-               geraCodigo (NULL, armazena); 
-            }
+                simb *s = ts_busca(TS, token);
+
+                if (s != NULL) {
+                    char aux_s[20];
+                    char armazena[10] = "ARMZ ";
+                    sprintf(aux_s, "%d, %d", s->nivel_lexico, s->deslocamento);
+                    strcat(armazena, aux_s);
+                    geraCodigo (NULL, armazena); 
+                }
+                else
+                    printf("ERROR: variavel nao declarada\n");
+            } 
+            ATRIBUICAO expressao PONTO_E_VIRGULA
+
 ;
 
 cmd_repetitivo: WHILE
