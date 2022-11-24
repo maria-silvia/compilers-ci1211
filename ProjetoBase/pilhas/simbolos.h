@@ -4,14 +4,6 @@
 #include <string.h>
 #include "pilha.h"
 
-/*
-typedef struct simb {
-    char *ident;
-    char *cat;
-    //outros atributos
-} simb;
-*/
-
 typedef enum
 {
     Inteiro,
