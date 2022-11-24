@@ -12,7 +12,8 @@ void print_simb(void *s) {
     printf("[ident=%s,", ((simb *)s)->ident);
     printf("cat=%d,", (int)((simb *)s)->cat);
     printf("nivel_lexico=%d,",(int)((simb *)s)->nivel_lexico );
-    printf("deslocamento=%d]\n", (int)((simb *)s)->deslocamento);
+    printf("deslocamento=%d,", (int)((simb *)s)->deslocamento);
+    printf("tipo=%d]\n", (int)((simb *)s)->tipo);
 }
 
 void print_tabela(tabela_de_simbolos *t) {
@@ -57,3 +58,14 @@ void ts_retira(tabela_de_simbolos *t, int n) {
         pop(t->s);
 
 }
+
+
+void ts_insere_tipo(tabela_de_simbolos *t, int n, tipo_t tipo) {
+
+    for (int i=t->s->tam-1; i>=t->s->tam-n; i--) {
+        simb *aux_s = t->s->p[i];
+        aux_s->tipo = tipo;
+    }
+
+}
+

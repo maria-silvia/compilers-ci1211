@@ -6,8 +6,8 @@
 
 typedef enum
 {
-    Inteiro,
-    Booleano
+    Booleano,
+    Inteiro
 } tipo_t;
 
 typedef enum
@@ -40,4 +40,5 @@ void print_tabela(tabela_de_simbolos *t);
 void ts_insere(tabela_de_simbolos *t, char *ident, categoria_t cat, int nivel_lexico, int deslocamento);
 simb *ts_busca(tabela_de_simbolos *t, char *ident);
 void ts_retira(tabela_de_simbolos *t, int n);
+void ts_insere_tipo(tabela_de_simbolos *t, int n, tipo_t tipo);
 #endif

@@ -5,12 +5,12 @@
  - [x] Tabela simbolos      //Arthur
 
 ### aula 6
-- [ ] ser capaz de traduzir varGlobais.pas             
+- [X] ser capaz de traduzir varGlobais.pas             
 - [x] CRCT
 - [X] ARMZ
 - [X] DMEM
 - [x] testar retira
-- [ ] atualizar tipo na TS
+- [X] atualizar tipo na TS
 
 Desafios:
 - [ ] não for um símbolo ∈ Variável Simples, Parâmetro formal ou Função, deve indicar erro

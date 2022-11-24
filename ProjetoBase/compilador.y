@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 #include "compilador.h"
 #include "pilhas/simbolos.h"
 
@@ -85,7 +86,7 @@ declara_var : { }
               lista_id_var DOIS_PONTOS
               tipo
               { 
-                  // ts_insere_tipo(&TS, token);
+                  ts_insere_tipo(TS, num_vars, string2type(token));
                   char amemk[20] = "AMEM ";
                   char aux_s[5];
                   sprintf(aux_s, "%d", num_vars);
