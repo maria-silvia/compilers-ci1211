@@ -9,11 +9,10 @@ tabela_de_simbolos *init_tabela() {
 }
 
 void print_simb(void *s) {
-    printf("[ident=%s, cat=%d, nivel_lexico=%d, deslocamento=%d]\n", 
-        ((simb *)s)->ident, 
-        (int)((simb *)s)->cat, 
-        (int)((simb *)s)->nivel_lexico, 
-        (int)((simb *)s)->deslocamento);
+    printf("[ident=%s,", ((simb *)s)->ident);
+    printf("cat=%d,", (int)((simb *)s)->cat);
+    printf("nivel_lexico=%d,",(int)((simb *)s)->nivel_lexico );
+    printf("deslocamento=%d]\n", (int)((simb *)s)->deslocamento);
 }
 
 void print_tabela(tabela_de_simbolos *t) {

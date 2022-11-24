@@ -41,11 +41,15 @@ void *pop(stack_t *s) {
 
 
 void print_pilha(stack_t *s, void print_elem (void*)) {
+    if (s->tam ==0)
+    {
+        printf("PILHA VAZIA");
+    }
 
     for (int i=0; i<s->tam; i++) {
         print_elem(s->p[i]);
-        printf(" ");
     }
+    
     printf("\n");
 
 }
