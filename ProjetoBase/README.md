@@ -3,13 +3,13 @@
 ## to do
  - [x] Pilha genérica       //Arthur
  - [x] Tabela simbolos      //Arthur
-- testar retira
 
 ### aula 6
 - [ ] ser capaz de traduzir varGlobais.pas             
 - [x] CRCT
-- [ ] ARMZ
+- [X] ARMZ
 - [X] DMEM
+- [x] testar retira
 - [ ] atualizar tipo na TS
 
 Desafios:

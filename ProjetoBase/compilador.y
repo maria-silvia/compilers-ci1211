@@ -42,25 +42,32 @@ programa    :{
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
              bloco PONTO {
                //finalizaCompilador();
-               print_tabela(TS);
-               
                geraCodigo (NULL, "PARA");
-
              }
 ;
 
 bloco       :
-              parte_declara_vars
               {
                 desloc = 0;
               }
-
+              parte_declara_vars
+              subrotinas_opcional
+              {
+               print_tabela(TS);
+              }
               comando_composto
-            | subrotinas
-              ;
+              {
+                  ts_retira(TS, desloc);
+                  char dmemk[20] = "DMEM ";
+                  char aux_s[5];
+                  sprintf(aux_s, "%d", desloc);
+                  strcat(dmemk, aux_s);
+                  geraCodigo (NULL, dmemk); 
+                  print_tabela(TS);
+              }
+;
 
-
-
+subrotinas_opcional: subrotinas | ;
 
 parte_declara_vars:  var
 ;
@@ -115,12 +122,7 @@ lista_idents: lista_idents VIRGULA IDENT
 
 comando_composto: T_BEGIN comandos T_END
                   {
-                     // ts_retira(desloc);
-                     char dmemk[20] = "DMEM ";
-                     char aux_s[5];
-                     sprintf(aux_s, "%d", desloc);
-                     strcat(dmemk, aux_s);
-                     geraCodigo (NULL, dmemk); 
+
                   }
 
 comandos: comandos comando
