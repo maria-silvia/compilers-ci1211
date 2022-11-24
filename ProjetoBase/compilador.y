@@ -15,6 +15,8 @@ int num_vars;
 int nivel_lexico;
 int desloc;
 
+char ident[20];
+
 tabela_de_simbolos *TS;
 
 %}
@@ -136,9 +138,11 @@ comando_sem_rotulo: atribuicao
 
 atribuicao: IDENT 
             {
-
-                simb *s = ts_busca(TS, token);
-
+               strncpy(ident, token, 20);
+            } 
+            ATRIBUICAO expressao PONTO_E_VIRGULA 
+            {
+                simb *s = ts_busca(TS, ident);
                 if (s != NULL) {
                     char aux_s[20];
                     char armazena[10] = "ARMZ ";
@@ -148,9 +152,7 @@ atribuicao: IDENT
                 }
                 else
                     printf("ERROR: variavel nao declarada\n");
-            } 
-            ATRIBUICAO expressao PONTO_E_VIRGULA
-
+            }
 ;
 
 cmd_repetitivo: WHILE
