@@ -218,4 +218,52 @@ not { simbolo = simb_not;
           return NUMERO;
         }
 
+
+= { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" igual  ");
+          return IGUAL;
+        }
+
+\<> { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" diferente  ");
+          return DIFERENTE;
+        }
+
+\< { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" menor  ");
+          return MENOR;
+        }
+
+\<= { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" menor_igual  ");
+          return MENOR_IGUAL;
+        }
+
+\>= { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" maior_igual  ");
+          return MAIOR_IGUAL;
+        }
+
+\> { 
+          strncpy (token, yytext, TAM_TOKEN);
+          IMPRIME(" maior ");  
+          return MAIOR;
+        }
+
+\+ { 
+      strncpy (token, yytext, TAM_TOKEN);
+      IMPRIME(" mais ");  
+      return MAIS;
+    }
+
+\- { 
+      strncpy (token, yytext, TAM_TOKEN);
+      IMPRIME(" menos ");  
+      return MENOS;
+    }
 %%

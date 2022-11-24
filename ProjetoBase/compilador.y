@@ -30,6 +30,9 @@ tabela_de_simbolos *TS;
 %token GOTO IF THEN ELSE WHILE DO OR ASTERISCO
 %token DIVISAO AND NOT NUMERO
 
+%token IGUAL DIFERENTE MENOR MENOR_IGUAL MAIOR_IGUAL MAIOR
+%token MAIS MENOS
+
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
 
@@ -194,21 +197,34 @@ cond_else   : ELSE comando_sem_rotulo
             | %prec LOWER_THAN_ELSE
 ;
 
-expressao: expressao_simples
+expressao: expressao_simples expressa_opt 
+;
+expressa_opt: relacao expressao_simples 
+            |
+;
+relacao:    IGUAL | DIFERENTE | MENOR | MENOR_IGUAL | MAIOR_IGUAL | MAIOR
 ;
 
-expressao_simples: termo
+expressao_simples: mais_menos_opt termo | expressao_simples mais_menos_or termo 
 ;
 
-termo: fator
-;
+mais_menos_or: MAIS | MENOS | OR ;
+mais_menos_opt:   MAIS | MENOS | ;
 
-fator: NUMERO 
+termo: fator | termo mult_div_and fator
+;
+mult_div_and: ASTERISCO | DIVISAO | AND;
+
+fator:
+      IDENT
+      | NUMERO 
       { 
          char crctnum[10] = "CRCT ";
          strcat(crctnum, token);
          geraCodigo(NULL, crctnum);
       }
+      | ABRE_PARENTESES expressao FECHA_PARENTESES
+      | NOT fator
 ;
 
 

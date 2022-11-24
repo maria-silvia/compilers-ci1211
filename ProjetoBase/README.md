@@ -18,9 +18,10 @@ Desafios:
  
 ### aula 7 - expressoes, verificar tipos
 - [X] AMEN k
+- [x] regras 25 a 29
 - [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
 - [ ] ser capaz de detectar erros erroTipo.pas    
-- [ ] regras 25 a 30
+- [ ] 30
 
 Dica: a regra 30 é a única que acessa a tabela de símbolos.
 Nas demais, usa-se as construções (como pilha ou $$).
