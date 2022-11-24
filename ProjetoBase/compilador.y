@@ -153,7 +153,7 @@ atribuicao: IDENT
                     geraCodigo (NULL, armazena); 
                 }
                 else
-                    printf("ERROR: variavel nao declarada\n");
+                  imprimeErro("variavel nao declarada");
             }
 ;
 
@@ -214,6 +214,7 @@ fator: NUMERO
 subrotinas: declara_procedimento
 ;
 declara_procedimento:   PROCEDURE IDENT PONTO_E_VIRGULA bloco
+;
 %%
 
 void yyerror(char *s) {
