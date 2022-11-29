@@ -19,6 +19,11 @@ Desafios:
 ### aula 7 - expressoes, verificar tipos
 - [X] AMEN k
 - [x] regras 25 a 29
+- [ ] CRVL
+
+- [ ] testar expressao_simples
+- [ ] testar relacao
+
 - [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
 - [ ] ser capaz de detectar erros erroTipo.pas    
 - [ ] 30
@@ -31,7 +36,7 @@ Nas demais, usa-se as construções (como pilha ou $$).
 - [ ] DIVI, SOMA
 
 
-### aual 8  e 9
+### aula 8  e 9
  - [ ] while  
  - [ ] if
  - [ ] subrotina geradora do proximo rotulo
@@ -40,7 +45,6 @@ Nas demais, usa-se as construções (como pilha ou $$).
  - [ ] while aninhados, nao confundir rotulos
  
  - [ ] LEIT, IMPR
- - [ ] CRVL
 
 
 ### aula 10

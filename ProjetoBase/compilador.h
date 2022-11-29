@@ -14,6 +14,10 @@
  *
  * ------------------------------------------------------------------- */
 
+#ifndef __COMPILADOR__
+#define __COMPILADOR__
+
+
 #define TAM_TOKEN 16
 
 typedef enum simbolos {
@@ -48,3 +52,5 @@ void geraCodigo (char*, char*);
 int yylex();
 void yyerror(char *s);
 int imprimeErro(char*);
+
+#endif

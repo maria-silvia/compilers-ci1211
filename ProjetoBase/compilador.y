@@ -148,16 +148,7 @@ atribuicao: IDENT
             } 
             ATRIBUICAO expressao PONTO_E_VIRGULA 
             {
-                simb *s = ts_busca(TS, ident);
-                if (s != NULL) {
-                    char aux_s[20];
-                    char armazena[10] = "ARMZ ";
-                    sprintf(aux_s, "%d, %d", s->nivel_lexico, s->deslocamento);
-                    strcat(armazena, aux_s);
-                    geraCodigo (NULL, armazena); 
-                }
-                else
-                  imprimeErro("variavel nao declarada");
+                gera_codigo_com_endereco(TS, "ARMZ ", ident);
             }
 ;
 
@@ -205,11 +196,13 @@ expressa_opt: relacao expressao_simples
 relacao:    IGUAL | DIFERENTE | MENOR | MENOR_IGUAL | MAIOR_IGUAL | MAIOR
 ;
 
-expressao_simples: mais_menos_opt termo | expressao_simples mais_menos_or termo 
+expressao_simples: mais_menos_opt termo 
+                | expressao_simples MAIS termo {geraCodigo(NULL, "SOMA");}
+                | expressao_simples MENOS termo {geraCodigo(NULL, "SUBT");}
+                | expressao_simples OR termo {geraCodigo(NULL, "OR");}
 ;
 
-mais_menos_or: MAIS | MENOS | OR ;
-mais_menos_opt:   MAIS | MENOS | ;
+mais_menos_opt: MAIS | MENOS | ;
 
 termo: fator | termo mult_div_and fator
 ;
@@ -217,6 +210,10 @@ mult_div_and: ASTERISCO | DIVISAO | AND;
 
 fator:
       IDENT
+      { 
+        gera_codigo_com_endereco(TS, "CRVL", token);
+
+      }
       | NUMERO 
       { 
          char crctnum[10] = "CRCT ";
