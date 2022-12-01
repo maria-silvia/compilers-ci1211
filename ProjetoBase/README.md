@@ -19,21 +19,21 @@ Desafios:
 ### aula 7 - expressoes, verificar tipos
 - [X] AMEN k
 - [x] regras 25 a 29
-- [ ] CRVL
+- [x] CRVL
 
+##### exp. booleanas (regras 25 e 26)
 - [ ] testar expressao_simples
-- [ ] testar relacao
+    - [ ] DIVI, SOMA
+- [ ] testar relacao (talvez seja mais facil com if feito)
+    - [ ] CMIG
+    - [ ] CMMA, CMME, CMDG, CONJ (and)
 
 - [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
 - [ ] ser capaz de detectar erros erroTipo.pas    
-- [ ] 30
+- [ ] regra 30
 
 Dica: a regra 30 é a única que acessa a tabela de símbolos.
 Nas demais, usa-se as construções (como pilha ou $$).
-##### exp. booleanas (regras 25 e 26)
-- [ ] CMIG
-- [ ] CMMA, CMME, CMDG, CONJ (and)
-- [ ] DIVI, SOMA
 
 
 ### aula 8  e 9
