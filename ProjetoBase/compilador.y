@@ -163,7 +163,7 @@ cmd_repetitivo: WHILE
                }
                 DO comando_composto
                {
-                  geraCodigo (NULL, "DVSS R00"); 
+                  geraCodigo (NULL, "DSVS R00"); 
                   geraCodigo ("R01", "NADA");
                   // desempilhar os dois rotulos
                }

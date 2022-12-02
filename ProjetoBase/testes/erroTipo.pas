@@ -6,4 +6,5 @@ begin
     temp:=10;
     k1:=(a+temp) div 1;
     k1:=(a+temp) > 1; (* Acusa Erro *)
+    k1:=(a+temp) + (2 > 1); (* Acusa Erro *)
 end.
