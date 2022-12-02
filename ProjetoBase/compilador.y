@@ -16,7 +16,7 @@ int num_vars;
 int nivel_lexico;
 int desloc;
 
-char ident[20];
+char _atribuicao[20];
 
 tabela_de_simbolos *TS;
 
@@ -144,11 +144,11 @@ comando_sem_rotulo: atribuicao
 
 atribuicao: IDENT 
             {
-               strncpy(ident, token, 20);
+               strncpy(_atribuicao, token, 20);
             } 
             ATRIBUICAO expressao PONTO_E_VIRGULA 
             {
-                gera_codigo_com_endereco(TS, "ARMZ ", ident);
+                gera_codigo_com_endereco(TS, "ARMZ", _atribuicao);
             }
 ;
 
@@ -190,10 +190,13 @@ cond_else   : ELSE comando_sem_rotulo
 
 expressao: expressao_simples expressa_opt 
 ;
-expressa_opt: relacao expressao_simples 
+expressa_opt: IGUAL expressao_simples {geraCodigo(NULL, "CMIG");}
+            | DIFERENTE expressao_simples {geraCodigo(NULL, "CMDG");}
+            | MENOR expressao_simples {geraCodigo(NULL, "CMME");}
+            | MENOR_IGUAL expressao_simples {geraCodigo(NULL, "CMEG");}
+            | MAIOR_IGUAL expressao_simples {geraCodigo(NULL, "CMAG");}
+            | MAIOR expressao_simples {geraCodigo(NULL, "CMMA");}
             |
-;
-relacao:    IGUAL | DIFERENTE | MENOR | MENOR_IGUAL | MAIOR_IGUAL | MAIOR
 ;
 
 expressao_simples: MAIS termo | termo 
@@ -222,7 +225,7 @@ fator:
          geraCodigo(NULL, crctnum);
       }
       | ABRE_PARENTESES expressao FECHA_PARENTESES
-      | NOT fator
+      | NOT fator {geraCodigo(NULL, "NEGA");}
 ;
 
 

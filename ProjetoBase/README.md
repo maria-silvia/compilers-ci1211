@@ -24,9 +24,8 @@ Desafios:
 ##### exp. booleanas (regras 25 e 26)
 - [x] testar expressao_simples
     - [x] DIVI, SOMA
-- [ ] testar relacao 
-    - [ ] CMIG
-    - [ ] CMMA, CMME, CMDG, 
+- [x] testar relacao 
+    - [x] CMIG, CMMA, CMME, CMDG, etc
     - [x] CONJ (and)
 
 - [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
