@@ -196,17 +196,18 @@ expressa_opt: relacao expressao_simples
 relacao:    IGUAL | DIFERENTE | MENOR | MENOR_IGUAL | MAIOR_IGUAL | MAIOR
 ;
 
-expressao_simples: mais_menos_opt termo 
+expressao_simples: MAIS termo | termo 
+                | MENOS termo  {geraCodigo(NULL, "CRCT -1"); geraCodigo(NULL, "MULT");}
                 | expressao_simples MAIS termo {geraCodigo(NULL, "SOMA");}
                 | expressao_simples MENOS termo {geraCodigo(NULL, "SUBT");}
-                | expressao_simples OR termo {geraCodigo(NULL, "OR");}
+                | expressao_simples OR termo {geraCodigo(NULL, "DISJ");}
 ;
 
-mais_menos_opt: MAIS | MENOS | ;
-
-termo: fator | termo mult_div_and fator
+termo: fator 
+      | termo ASTERISCO fator {geraCodigo(NULL, "MULT");}
+      | termo DIVISAO fator {geraCodigo(NULL, "DIVI");}
+      | termo AND fator {geraCodigo(NULL, "CONJ");}
 ;
-mult_div_and: ASTERISCO | DIVISAO | AND;
 
 fator:
       IDENT

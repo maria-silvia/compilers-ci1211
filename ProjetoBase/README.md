@@ -22,11 +22,12 @@ Desafios:
 - [x] CRVL
 
 ##### exp. booleanas (regras 25 e 26)
-- [ ] testar expressao_simples
-    - [ ] DIVI, SOMA
-- [ ] testar relacao (talvez seja mais facil com if feito)
+- [x] testar expressao_simples
+    - [x] DIVI, SOMA
+- [ ] testar relacao 
     - [ ] CMIG
-    - [ ] CMMA, CMME, CMDG, CONJ (and)
+    - [ ] CMMA, CMME, CMDG, 
+    - [x] CONJ (and)
 
 - [ ] ser capaz de detectar erros varGlobaisInvalido.pas    
 - [ ] ser capaz de detectar erros erroTipo.pas    
