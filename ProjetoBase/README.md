@@ -1,5 +1,12 @@
 # Trabalho compiladores
 
+## Como rodar testes do compilador
+
+`./run.sh testes/teste1.pas`
+E entao consultar resultado no arquivo MEPA.
+
+
+
 ## to do
  - [x] Pilha genérica       //Arthur
  - [x] Tabela simbolos      //Arthur
