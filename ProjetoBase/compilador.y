@@ -11,6 +11,7 @@
 #include "utils.h"
 #include "compilador.h"
 #include "pilhas/simbolos.h"
+#include "pilhas/rotulos.h"
 
 int num_vars;
 int nivel_lexico;
@@ -19,7 +20,9 @@ int desloc;
 char _atribuicao[20];
 
 tabela_de_simbolos *TS;
+pilha_de_rotulos *PR;
 
+int rot_id;
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
@@ -154,18 +157,20 @@ atribuicao: IDENT
 
 cmd_repetitivo: WHILE
                {
-                  // empilhar os dois rotulos
-                  geraCodigo ("R00", "NADA"); 
+                  rot_id = gera_rotulos(PR, 1);
+                  geraCodigo("R00", "NADA"); 
                }
                 expressao 
                {
+                  rot_id = gera_rotulos(PR, 1);
                   geraCodigo (NULL, "DVSF R01"); 
                }
                 DO comando_composto
                {
+                  rot_id = pop_rot(PR, 1);
                   geraCodigo (NULL, "DSVS R00"); 
+                  rot_id = pop_rot(PR, 1);
                   geraCodigo ("R01", "NADA");
-                  // desempilhar os dois rotulos
                }
 ;
 
@@ -260,6 +265,7 @@ int main (int argc, char** argv) {
  *  Inicia a Tabela de S�mbolos
  * ------------------------------------------------------------------- */
    TS = init_tabela();
+   PR = init_rotulos();
    yyin=fp;
    yyparse();
 
