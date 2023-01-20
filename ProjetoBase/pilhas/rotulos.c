@@ -12,7 +12,7 @@ pilha_de_rotulos *init_rotulos() {
     p->s = init_pilha();
 
     return p;
-
+    
 }
 
 void print_rotulo(void *r) {
@@ -25,24 +25,20 @@ void print_rotulos(pilha_de_rotulos *pr) {
 
 }
 
-void gera_rotulos(pilha_de_rotulos *pr, int quant) {
+int gera_rotulos(pilha_de_rotulos *pr) {
+    printf("> GERA ROTULO: \n");
+    rotulo *rot = (rotulo *)malloc(sizeof(rotulo));
 
-    for (int i=0; i<quant; i++) {
-        rotulo *rot = (rotulo *)malloc(sizeof(rotulo));
-
-        rot->id = rot_num;
-        push(pr->s, rot);
-        rot_num++;
-    }
-
+    rot->id = rot_num;
+    push(pr->s, rot);
+    rot_num++;
+    print_rotulos(pr);
+    return rot->id;
 }
 
-int pop_rot(pilha_de_rotulos *pr, int quant) {
-
-    for (int i=0; i<quant; i++) {
-        if (pop(pr->s) == NULL)
-            return 0;
-    }
-    return 1;
-
+int pop_rot(pilha_de_rotulos *pr) {
+    printf("> POP ROTULO: \n");
+    rotulo *topo = pop(pr->s);
+    print_rotulos(pr);
+    return topo->id;
 }

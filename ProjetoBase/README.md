@@ -44,14 +44,15 @@ Nas demais, usa-se as construções (como pilha ou $$).
 
 
 ### aula 8  e 9
- - [ ] while  
+ - [ ] LEIT, IMPR
+ - [ ] BUG: aula8 nao escreve variavel k na tabela
+ - [x] while  
  - [ ] if
  - [ ] subrotina geradora do proximo rotulo
  - [ ] pilha de rotulos (padrao Rdd)
 
  - [ ] while aninhados, nao confundir rotulos
  
- - [ ] LEIT, IMPR
 
 
 ### aula 10

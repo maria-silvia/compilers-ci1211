@@ -17,7 +17,7 @@ void print_simb(void *s) {
 }
 
 void print_tabela(tabela_de_simbolos *t) {
-
+    printf("TABELA SIMBOLOS: \n");
     print_pilha(t->s, print_simb);
 
 }
