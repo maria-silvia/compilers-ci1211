@@ -128,9 +128,11 @@ lista_idents: lista_idents VIRGULA IDENT
 
 
 comando_composto: T_BEGIN comandos T_END
+               | T_BEGIN comandos T_END PONTO_E_VIRGULA
                   {
 
                   }
+;
 
 comandos: comandos comando
         | comando
