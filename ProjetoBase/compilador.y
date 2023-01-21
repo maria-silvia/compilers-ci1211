@@ -160,40 +160,19 @@ atribuicao: IDENT
 cmd_repetitivo: WHILE
                {
                   rot_id = gera_rotulos(PR);
-                  char rotulo[10];
-                  if (rot_id < 9)
-                     sprintf(rotulo, "%s%d", "R0", rot_id);
-                  else
-                     sprintf(rotulo, "%s%d", "R", rot_id);
-                  geraCodigo(rotulo, "NADA"); 
+                  gera_codigo_rotulo_faz_nada(rot_id); // rotulo usado no DSVS
                }
                 expressao 
                {
                   rot_id = gera_rotulos(PR);
-                  char rotulo[10];
-                  if (rot_id < 9)
-                     sprintf(rotulo, "DVSF %s%d", "R0", rot_id);
-                  else
-                     sprintf(rotulo, "DVSF %s%d", "R", rot_id);                  
-                  geraCodigo(NULL, rotulo); 
+                  gera_codigo_desvia_pra_rotulo("DSVF", rot_id);
                }
                 DO comando_composto
                {
                   int rot_nada = pop_rot(PR);
                   int rot_desvia = pop_rot(PR);
-                  
-                  char rotulo[10];
-                  if (rot_id < 9)
-                     sprintf(rotulo, "DSVS %s%d", "R0", rot_desvia);
-                  else
-                     sprintf(rotulo, "DSVS %s%d", "R", rot_desvia);                  
-                  geraCodigo(NULL, rotulo); 
-
-                  if (rot_id < 9)
-                     sprintf(rotulo, "%s%d", "R0", rot_nada);
-                  else
-                     sprintf(rotulo, "%s%d", "R", rot_nada);
-                  geraCodigo(rotulo, "NADA");
+                  gera_codigo_desvia_pra_rotulo("DSVS", rot_desvia); 
+                  gera_codigo_rotulo_faz_nada(rot_nada); // rotulo usado no DSVF
                }
 ;
 
