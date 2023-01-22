@@ -52,3 +52,13 @@ void gera_codigo_desvia_pra_rotulo(char *comando, int rot_id) {
         sprintf(rotulo, "%s %s%d", comando, "R", rot_id);                  
     geraCodigo(NULL, rotulo); 
 }
+
+/*
+    gera string do tipo 
+    "COMANDO n"
+*/
+void gera_codigo_cmd_e_numero(char *comando, int num) {
+    char codigo[10];
+    sprintf(codigo, "%s %d", comando, num);
+    geraCodigo(NULL, codigo); 
+}

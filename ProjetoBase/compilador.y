@@ -65,11 +65,7 @@ bloco       :
               comando_composto
               {
                   ts_retira(TS, desloc);
-                  char dmemk[20] = "DMEM ";
-                  char aux_s[5];
-                  sprintf(aux_s, "%d", desloc);
-                  strcat(dmemk, aux_s);
-                  geraCodigo (NULL, dmemk); 
+                  gera_codigo_cmd_e_numero("DMEM", desloc);
                   print_tabela(TS);
               }
 ;
@@ -93,11 +89,7 @@ declara_var : { }
               tipo
               { 
                   ts_insere_tipo(TS, num_vars, string2type(token));
-                  char amemk[20] = "AMEM ";
-                  char aux_s[5];
-                  sprintf(aux_s, "%d", num_vars);
-                  strcat(amemk, aux_s);
-                  geraCodigo (NULL, amemk); //amem parcial
+                  gera_codigo_cmd_e_numero("AMEM", num_vars);
                   num_vars=0;
               }
               PONTO_E_VIRGULA
