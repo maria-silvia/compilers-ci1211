@@ -28,7 +28,8 @@ typedef enum simbolos {
   // alteracoes minhas:
   simb_label, simb_for, simb_procedure, 
   simb_function, simb_goto, simb_if, simb_then, simb_else, simb_while, 
-  simb_do, simb_or, simb_asterisco, simb_divisao, simb_and, simb_not
+  simb_do, simb_or, simb_asterisco, simb_divisao, simb_and, simb_not,
+  simb_read, simb_write
 } simbolos;
 
 

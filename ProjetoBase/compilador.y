@@ -34,7 +34,7 @@ int rot_id;
 %token DIVISAO AND NOT NUMERO
 
 %token IGUAL DIFERENTE MENOR MENOR_IGUAL MAIOR_IGUAL MAIOR
-%token MAIS MENOS
+%token MAIS MENOS READ WRITE
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -122,7 +122,6 @@ lista_idents: lista_idents VIRGULA IDENT
 comando_composto: T_BEGIN comandos T_END
                | T_BEGIN comandos T_END PONTO_E_VIRGULA
                   {
-
                   }
 ;
 
@@ -137,6 +136,7 @@ comando: comando_sem_rotulo
 comando_sem_rotulo: atribuicao
                   | cmd_repetitivo
                   | cmd_condicional
+                  | cmd_read
 ;
 
 atribuicao: IDENT 
@@ -185,6 +185,20 @@ if_then     : IF expressao
 ;
 cond_else   : ELSE comando_sem_rotulo
             | %prec LOWER_THAN_ELSE
+;
+
+cmd_read    : READ ABRE_PARENTESES read_idents FECHA_PARENTESES PONTO_E_VIRGULA 
+;
+read_idents: read_idents VIRGULA IDENT
+            { 
+               geraCodigo(NULL, "LEIT");
+               gera_codigo_com_endereco(TS, "ARMZ", token);
+            }
+            | IDENT 
+            { 
+               geraCodigo(NULL, "LEIT");
+               gera_codigo_com_endereco(TS, "ARMZ", token);
+            }
 ;
 
 expressao: expressao_simples expressa_opt 

@@ -205,6 +205,20 @@ not { simbolo = simb_not;
           return NOT;
 }
 
+read { 
+      simbolo = simb_read;
+      strncpy (token, yytext, TAM_TOKEN);
+      IMPRIME(" read ");  
+      return READ;
+    }
+
+write { 
+  simbolo = simb_write;
+  strncpy (token, yytext, TAM_TOKEN);
+  IMPRIME(" write ");  
+  return WRITE;
+}
+
 {ident} { simbolo = simb_identificador;
           strncpy (token, yytext, TAM_TOKEN);
           IMPRIME(" ident  ");
