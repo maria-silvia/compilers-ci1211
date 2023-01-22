@@ -49,8 +49,8 @@ Nas demais, usa-se as construções (como pilha ou $$).
  - [ ] BUG: aula8 nao escreve variavel k na tabela
  - [x] while  
  - [ ] if
- - [ ] subrotina geradora do proximo rotulo
- - [ ] pilha de rotulos (padrao Rdd)
+ - [X] subrotina geradora do proximo rotulo
+ - [X] pilha de rotulos (padrao Rdd)
 
  - [ ] while aninhados, nao confundir rotulos
  
