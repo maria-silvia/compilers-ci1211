@@ -45,7 +45,7 @@ Nas demais, usa-se as construções (como pilha ou $$).
 
 ### aula 8  e 9
  - [x] LEIT 
- - [ ] IMPR
+ - [X] IMPR
  - [ ] BUG: aula8 nao escreve variavel k na tabela
  - [x] while  
  - [ ] if

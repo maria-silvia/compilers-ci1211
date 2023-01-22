@@ -136,7 +136,7 @@ comando: comando_sem_rotulo
 comando_sem_rotulo: atribuicao
                   | cmd_repetitivo
                   | cmd_condicional
-                  | cmd_read
+                  | cmd_read | cmd_write
 ;
 
 atribuicao: IDENT 
@@ -198,6 +198,20 @@ read_idents: read_idents VIRGULA IDENT
             { 
                geraCodigo(NULL, "LEIT");
                gera_codigo_com_endereco(TS, "ARMZ", token);
+            }
+;
+
+cmd_write    : WRITE ABRE_PARENTESES write_idents FECHA_PARENTESES PONTO_E_VIRGULA 
+;
+write_idents: write_idents VIRGULA IDENT
+            { 
+               gera_codigo_com_endereco(TS, "CRVL", token);
+               geraCodigo(NULL, "IMPR");
+            }
+            | IDENT 
+            { 
+               gera_codigo_com_endereco(TS, "CRVL", token);
+               geraCodigo(NULL, "IMPR");
             }
 ;
 
