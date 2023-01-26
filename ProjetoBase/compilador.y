@@ -171,19 +171,30 @@ cmd_repetitivo: WHILE
 cmd_condicional:  if_then cond_else 
                   { 
                     // em_if_finaliza (); 
+                     int rot_do_fim = pop_rot(PR);
+                     gera_codigo_rotulo_faz_nada(rot_do_fim); 
                   }
 ;
 
 if_then     : IF expressao 
             {
-              // em_if_apos_expr ();
+               // em_if_apos_expr ();
+               rot_id = gera_rotulos(PR);
+               gera_codigo_desvia_pra_rotulo("DSVF", rot_id);
             }
              THEN comando_sem_rotulo
             {
               // em_if_apos_then ();
+               rot_id = gera_rotulos(PR);
+               gera_codigo_desvia_pra_rotulo("DSVS", rot_id); 
             }
 ;
-cond_else   : ELSE comando_sem_rotulo
+cond_else   : ELSE {
+               int rot_do_fim = pop_rot(PR);
+               int rot_do_else = pop_rot(PR);
+               push_rot(PR, rot_do_fim);
+               gera_codigo_rotulo_faz_nada(rot_do_else);    
+            } comando_sem_rotulo
             | %prec LOWER_THAN_ELSE
 ;
 

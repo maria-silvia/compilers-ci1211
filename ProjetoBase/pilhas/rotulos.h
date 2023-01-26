@@ -18,4 +18,5 @@ void print_rotulo(void *r);
 void print_rotulos(pilha_de_rotulos *pr);
 int gera_rotulos(pilha_de_rotulos *pr);
 int pop_rot(pilha_de_rotulos *pr);
+void push_rot(pilha_de_rotulos *pr, int id);
 #endif

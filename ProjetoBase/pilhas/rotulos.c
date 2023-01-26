@@ -36,6 +36,13 @@ int gera_rotulos(pilha_de_rotulos *pr) {
     return rot->id;
 }
 
+void push_rot(pilha_de_rotulos *pr, int id) {
+    printf("> PUSH ROTULO R %d \n", id);
+    rotulo *rot = (rotulo *)malloc(sizeof(rotulo));
+    rot->id = id;
+    push(pr->s, rot);
+}
+
 int pop_rot(pilha_de_rotulos *pr) {
     printf("> POP ROTULO: \n");
     rotulo *topo = pop(pr->s);
