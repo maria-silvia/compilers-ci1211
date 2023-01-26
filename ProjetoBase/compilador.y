@@ -201,16 +201,14 @@ read_idents: read_idents VIRGULA IDENT
             }
 ;
 
-cmd_write    : WRITE ABRE_PARENTESES write_idents FECHA_PARENTESES PONTO_E_VIRGULA 
+cmd_write    : WRITE ABRE_PARENTESES write_fatores FECHA_PARENTESES PONTO_E_VIRGULA 
 ;
-write_idents: write_idents VIRGULA IDENT
+write_fatores: write_fatores VIRGULA fator
             { 
-               gera_codigo_com_endereco(TS, "CRVL", token);
                geraCodigo(NULL, "IMPR");
             }
-            | IDENT 
+            | fator 
             { 
-               gera_codigo_com_endereco(TS, "CRVL", token);
                geraCodigo(NULL, "IMPR");
             }
 ;
