@@ -137,6 +137,7 @@ comando_sem_rotulo: atribuicao
                   | cmd_repetitivo
                   | cmd_condicional
                   | cmd_read | cmd_write
+                  | chama_proc
 ;
 
 atribuicao: IDENT 
@@ -268,8 +269,28 @@ fator:
 
 subrotinas: declara_procedimento
 ;
-declara_procedimento:   PROCEDURE IDENT PONTO_E_VIRGULA bloco
+declara_procedimento:   
+                    PROCEDURE
+                    IDENT PONTO_E_VIRGULA
+                    {
+                        // DSVS R00
+                        // R00: ENPR k
+                    }
+                     bloco
+                     {
+                        // RTPR k, n
+                     }
 ;
+
+chama_proc: IDENT 
+            { 
+                // busca na tabela
+                // empilha parametros
+                // CHPR R01, k
+            }
+            PONTO_E_VIRGULA
+;
+
 %%
 
 void yyerror(char *s) {
