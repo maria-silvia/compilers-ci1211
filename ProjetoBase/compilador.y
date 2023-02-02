@@ -185,11 +185,12 @@ if_then     : IF expressao
              THEN comando_sem_rotulo
             {
               // em_if_apos_then ();
-               rot_id = gera_rotulos(PR);
-               gera_codigo_desvia_pra_rotulo("DSVS", rot_id); 
+
             }
 ;
 cond_else   : ELSE {
+               rot_id = gera_rotulos(PR);
+               gera_codigo_desvia_pra_rotulo("DSVS", rot_id); 
                int rot_do_fim = pop_rot(PR);
                int rot_do_else = pop_rot(PR);
                push_rot(PR, rot_do_fim);
