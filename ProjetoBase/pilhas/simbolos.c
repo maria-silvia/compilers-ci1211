@@ -22,7 +22,7 @@ void print_tabela(tabela_de_simbolos *t) {
 
 }
 
-void ts_insere(tabela_de_simbolos *t, char *ident, categoria_t cat, int nivel_lexico, int deslocamento) {
+void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int deslocamento) {
 
     simb *s = (simb *)malloc(sizeof(simb));
 
@@ -32,13 +32,31 @@ void ts_insere(tabela_de_simbolos *t, char *ident, categoria_t cat, int nivel_le
     s->ident = (char *)malloc(sizeof(char)*strlen(ident));
     strcpy(s->ident, ident);
 
-    s->cat = cat;
+    s->cat = VS;
     s->nivel_lexico = nivel_lexico;
     s->deslocamento = deslocamento;
 
     push(t->s, s);
 
 }
+
+void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int rotulo) {
+
+    simb *s = (simb *)malloc(sizeof(simb));
+
+    s->ident = (char *)malloc(sizeof(char)*strlen(ident));
+    strcpy(s->ident, ident);
+
+    s->cat = PROC;
+    s->nivel_lexico = nivel_lexico;
+    s->rotulo = rotulo;
+
+    s->num_param = 0;
+
+    push(t->s, s);
+
+}
+
 
 int igual_ident(void *a, void *b) {
 

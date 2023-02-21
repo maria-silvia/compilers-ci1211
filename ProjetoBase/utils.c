@@ -16,7 +16,11 @@ tipo_t string2type (char *s) {
 */
 int gera_codigo_com_endereco(tabela_de_simbolos *TS, char *comando, char *aux_ident) {
 
+    printf("%s\n", aux_ident);
     simb *s = ts_busca(TS, aux_ident);
+
+    printf("%p\n", s);
+
     if (s != NULL) {
         char aux_s[20];
         sprintf(aux_s, "%s %d,%d", comando, s->nivel_lexico, s->deslocamento);

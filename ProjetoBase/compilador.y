@@ -23,6 +23,9 @@ tabela_de_simbolos *TS;
 pilha_de_rotulos *PR;
 
 int rot_id;
+int init_rot;
+
+char proc_atual[100];
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
@@ -44,6 +47,8 @@ int rot_id;
 programa    :{
                nivel_lexico = 0;
                geraCodigo (NULL, "INPP");
+
+               init_rot = gera_rotulos(PR);
              }
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
@@ -61,6 +66,7 @@ bloco       :
               subrotinas_opcional
               {
                print_tabela(TS);
+               gera_codigo_rotulo_faz_nada(init_rot);
               }
               comando_composto
               {
@@ -101,14 +107,14 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(TS, token, VS, nivel_lexico, desloc);
+               ts_insere_vs(TS, token, nivel_lexico, desloc);
                num_vars++;
                desloc++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(TS, token, VS, nivel_lexico, desloc);
+               ts_insere_vs(TS, token, nivel_lexico, desloc);
                num_vars++;
                desloc++;
             }
@@ -271,21 +277,39 @@ subrotinas: declara_procedimento
 ;
 declara_procedimento:   
                     PROCEDURE
-                    IDENT PONTO_E_VIRGULA
+                    IDENT 
                     {
-                        // DSVS R00
-                        // R00: ENPR k
+                        int aux_id = gera_rotulos(PR);
+                        nivel_lexico += 1;
+                        ts_insere_proc(TS, token, nivel_lexico, aux_id);
+
+                        gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
+                        gera_codigo_rotulo_faz_nada(aux_id);
+                        gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
+
+                        sprintf(proc_atual, "%s", token);
                     }
-                     bloco
-                     {
-                        // RTPR k, n
-                     }
+                    PONTO_E_VIRGULA
+                    bloco
+                    {
+                       char *s_aux;
+                       simb *simb_aux = ts_busca(TS, proc_atual);
+
+                       sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
+
+                       geraCodigo(NULL, s_aux);
+                       nivel_lexico -= 1;
+                    }
 ;
 
 chama_proc: IDENT 
-            { 
+            {
+                char *s_aux;
+                simb *simb_aux = ts_busca(TS, token);
                 // busca na tabela
                 // empilha parametros
+
+                sprintf(s_aux, "CHPR R%d, %d", simb_aux->rotulo, nivel_lexico);
                 // CHPR R01, k
             }
             PONTO_E_VIRGULA

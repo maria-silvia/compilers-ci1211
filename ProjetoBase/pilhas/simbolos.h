@@ -21,10 +21,15 @@ typedef enum
 
 typedef struct simb {
   char* ident;
-  tipo_t tipo;
   categoria_t cat; 
   int nivel_lexico;
+
   int deslocamento;
+  tipo_t tipo;
+
+  int rotulo;
+  int num_param;
+
 } simb; 
 
 
@@ -37,7 +42,8 @@ typedef struct tabela_de_simbolos {
 tabela_de_simbolos *init_tabela();
 void print_simb(void *s);
 void print_tabela(tabela_de_simbolos *t);
-void ts_insere(tabela_de_simbolos *t, char *ident, categoria_t cat, int nivel_lexico, int deslocamento);
+void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int deslocamento);
+void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int rotulo);
 simb *ts_busca(tabela_de_simbolos *t, char *ident);
 void ts_retira(tabela_de_simbolos *t, int n);
 void ts_insere_tipo(tabela_de_simbolos *t, int n, tipo_t tipo);
