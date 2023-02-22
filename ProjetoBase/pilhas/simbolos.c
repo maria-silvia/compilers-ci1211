@@ -25,10 +25,6 @@ void print_tabela(tabela_de_simbolos *t) {
 void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int deslocamento) {
 
     simb *s = (simb *)malloc(sizeof(simb));
-
-    //s->ident = ident;
-    //s->cat = cat;
-
     s->ident = (char *)malloc(sizeof(char)*strlen(ident));
     strcpy(s->ident, ident);
 
@@ -38,6 +34,19 @@ void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int desl
 
     push(t->s, s);
 
+}
+
+void ts_insere_pf(tabela_de_simbolos *t, char *ident, int nivel_lexico) {
+
+    simb *s = (simb *)malloc(sizeof(simb));
+    s->ident = (char *)malloc(sizeof(char)*strlen(ident));
+    strcpy(s->ident, ident);
+
+    s->cat = PF;
+    s->nivel_lexico = nivel_lexico;
+    s->deslocamento = 0;
+
+    push(t->s, s);
 }
 
 void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int rotulo) {
@@ -83,6 +92,19 @@ void ts_add_params(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t t
     }
 }
 
+void ts_atualiza_desloc_params(tabela_de_simbolos *t, char *ident) {
+    simb *proc = (simb *)search(t->s, igual_ident, (void *)ident);
+
+    int i = t->s->tam-1;
+    int deslocamento = -4;
+    while (deslocamento >= - 3 - proc->num_param)
+    {
+        simb *aux_s = t->s->p[i];
+        aux_s->deslocamento = deslocamento;
+        deslocamento--;
+        i--;
+    }
+}
 
 simb *ts_busca(tabela_de_simbolos *t, char *ident) {
 

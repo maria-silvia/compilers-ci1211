@@ -292,10 +292,8 @@ declara_procedimento:
                         int aux_id = gera_rotulos(PR);
                         nivel_lexico += 1;
                         push_desloc(PD, desloc);                        
-                        desloc = -4;
 
                         ts_insere_proc(TS, token, nivel_lexico, aux_id);
-
                         gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
                         gera_codigo_rotulo_faz_nada(aux_id);
                         gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
@@ -304,9 +302,6 @@ declara_procedimento:
                     }
                     lista_param
                     PONTO_E_VIRGULA
-                    {
-                        desloc = 0;
-                    }
                     bloco
                     {
                         char s_aux[30];
@@ -321,7 +316,11 @@ declara_procedimento:
 ;
 
 lista_param: |
-            ABRE_PARENTESES params FECHA_PARENTESES;
+            ABRE_PARENTESES params FECHA_PARENTESES
+            {
+               ts_atualiza_desloc_params(TS, proc_atual);
+            }
+;
 
 params: param | param VIRGULA params;
 
@@ -340,8 +339,7 @@ arguments: argument | arguments VIRGULA argument
 
 argument: IDENT 
         {
-            ts_insere_vs(TS, token, nivel_lexico, desloc);
-            desloc--;
+            ts_insere_pf(TS, token, nivel_lexico);
             num_vars++;
         }
 
@@ -356,7 +354,9 @@ modo: VAR
 
 chama_proc: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc | vai_para_proc;
 
-chama_params: expressao | expressao VIRGULA chama_params;
+chama_params: chama_params VIRGULA expressao 
+            | expressao
+;
 
 vai_para_proc: 
             PONTO_E_VIRGULA
