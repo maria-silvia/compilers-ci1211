@@ -12,6 +12,7 @@
 #include "compilador.h"
 #include "pilhas/simbolos.h"
 #include "pilhas/rotulos.h"
+#include "pilhas/desloc.h"
 
 int num_vars;
 int nivel_lexico;
@@ -19,6 +20,7 @@ int desloc;
 
 tabela_de_simbolos *TS;
 pilha_de_rotulos *PR;
+pilha_de_deslocs *PD;
 
 int rot_id;
 int init_rot;
@@ -82,7 +84,11 @@ parte_declara_vars:  var
 ;
 
 
-var         : { } VAR declara_vars
+var         : { } VAR
+                    {
+                        num_vars=0;
+                    }
+            declara_vars
             |
 ;
 
@@ -96,7 +102,6 @@ declara_var : { }
               { 
                   ts_insere_tipo(TS, num_vars, string2type(token));
                   gera_codigo_cmd_e_numero("AMEM", num_vars);
-                  num_vars=0;
               }
               PONTO_E_VIRGULA
 ;
@@ -286,6 +291,9 @@ declara_procedimento:
                     {
                         int aux_id = gera_rotulos(PR);
                         nivel_lexico += 1;
+                        push_desloc(PD, desloc);                        
+                        desloc = -4;
+
                         ts_insere_proc(TS, token, nivel_lexico, aux_id);
 
                         gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
@@ -296,15 +304,19 @@ declara_procedimento:
                     }
                     lista_param
                     PONTO_E_VIRGULA
+                    {
+                        desloc = 0;
+                    }
                     bloco
                     {
-                       char s_aux[30];
-                       simb *simb_aux = ts_busca(TS, proc_atual);
+                        char s_aux[30];
+                        simb *simb_aux = ts_busca(TS, proc_atual);
 
-                       sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
+                        sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
 
-                       geraCodigo(NULL, s_aux);
-                       nivel_lexico -= 1;
+                        geraCodigo(NULL, s_aux);
+                        nivel_lexico -= 1;
+                        desloc = pop_desloc(PD);
                     }
 ;
 
@@ -313,13 +325,27 @@ lista_param: |
 
 params: param | param VIRGULA params;
 
-param: modo IDENT DOIS_PONTOS tipo
+param: modo
         {
-            ts_add_param(TS, proc_atual, modo_param_aux, string2type(token));
+            num_vars = 0;
+        }
+        arguments DOIS_PONTOS tipo
+        {
+            ts_insere_tipo(TS, num_vars, string2type(token));
+            ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
         }
 ;
 
-modo: var 
+arguments: argument | arguments VIRGULA argument
+
+argument: IDENT 
+        {
+            ts_insere_vs(TS, token, nivel_lexico, desloc);
+            desloc--;
+            num_vars++;
+        }
+
+modo: VAR 
         {
             modo_param_aux = referencia;
         }
@@ -328,7 +354,12 @@ modo: var
             modo_param_aux = valor;
         };
 
-chama_proc: PONTO_E_VIRGULA
+chama_proc: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc | vai_para_proc;
+
+chama_params: expressao | expressao VIRGULA chama_params;
+
+vai_para_proc: 
+            PONTO_E_VIRGULA
             {
                 char s_aux[30];
                 simb *simb_aux = ts_busca(TS, ident_aux);
@@ -370,6 +401,7 @@ int main (int argc, char** argv) {
  * ------------------------------------------------------------------- */
    TS = init_tabela();
    PR = init_rotulos();
+   PD = init_deslocs();
    yyin=fp;
    yyparse();
 

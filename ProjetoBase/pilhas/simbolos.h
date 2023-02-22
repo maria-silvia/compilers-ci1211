@@ -21,7 +21,7 @@ typedef enum
     VS,
     PROC,
     FUNC,
-    ParametroFormal,
+    PF,
     ROT
 } categoria_t;
 
@@ -52,7 +52,8 @@ void print_simb(void *s);
 void print_tabela(tabela_de_simbolos *t);
 void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int deslocamento);
 void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int rotulo);
-void ts_add_param(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo);
+
+void ts_add_params(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo, int n);
 
 simb *ts_busca(tabela_de_simbolos *t, char *ident);
 void ts_retira(tabela_de_simbolos *t, int n);

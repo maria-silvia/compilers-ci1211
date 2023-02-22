@@ -59,26 +59,30 @@ void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int ro
     push(t->s, s);
 
 }
-void ts_add_param(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo){
-
-    simb *proc = (simb *)search(t->s, igual_ident, (void *)ident);
-
-    if (proc->num_param >= proc->tam_param) {
-        proc->tam_param = 2*proc->tam_param;
-        proc->param = realloc(proc->param, proc->tam_param*2*sizeof(int));
-    }
-
-    proc->param[2*proc->num_param] = tipo; 
-    proc->param[2*proc->num_param+1] = mp;
-
-    proc->num_param += 1; 
-    
-}
 
 int igual_ident(void *a, void *b) {
 
     return !strcmp( ((simb *)a)->ident, (char *)b );
 }
+
+void ts_add_params(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo, int n){
+
+    simb *proc = (simb *)search(t->s, igual_ident, (void *)ident);
+
+    for (int i=0; i<n; i++) {
+
+        if (proc->num_param >= proc->tam_param) {
+            proc->tam_param = 2*proc->tam_param;
+            proc->param = realloc(proc->param, proc->tam_param*2*sizeof(int));
+        }
+
+        proc->param[2*proc->num_param] = tipo; 
+        proc->param[2*proc->num_param+1] = mp;
+
+        proc->num_param += 1; 
+    }
+}
+
 
 simb *ts_busca(tabela_de_simbolos *t, char *ident) {
 
