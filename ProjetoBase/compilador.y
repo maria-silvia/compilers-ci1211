@@ -17,15 +17,13 @@ int num_vars;
 int nivel_lexico;
 int desloc;
 
-char _atribuicao[20];
-
 tabela_de_simbolos *TS;
 pilha_de_rotulos *PR;
 
 int rot_id;
 int init_rot;
 
-char proc_atual[100];
+char ident_aux[100], proc_atual[100];
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
@@ -65,8 +63,9 @@ bloco       :
               parte_declara_vars
               subrotinas_opcional
               {
-               print_tabela(TS);
-               gera_codigo_rotulo_faz_nada(init_rot);
+                print_tabela(TS);
+                if (nivel_lexico == 0)
+                  gera_codigo_rotulo_faz_nada(init_rot);
               }
               comando_composto
               {
@@ -139,20 +138,25 @@ comando: comando_sem_rotulo
         |
 ;
 
-comando_sem_rotulo: atribuicao
+comando_sem_rotulo: ident_first
                   | cmd_repetitivo
                   | cmd_condicional
                   | cmd_read | cmd_write
                   | chama_proc
 ;
 
-atribuicao: IDENT 
+ident_first: IDENT 
             {
-               strncpy(_atribuicao, token, 20);
-            } 
-            ATRIBUICAO expressao PONTO_E_VIRGULA 
+               strncpy(ident_aux, token, 100);
+            }
+            ident_continue
+;
+
+ident_continue: ATRIBUICAO atribuicao_c | chama_proc;
+
+atribuicao_c:  expressao PONTO_E_VIRGULA 
             {
-                gera_codigo_com_endereco(TS, "ARMZ", _atribuicao);
+                gera_codigo_com_endereco(TS, "ARMZ", ident_aux);
             }
 ;
 
@@ -292,7 +296,7 @@ declara_procedimento:
                     PONTO_E_VIRGULA
                     bloco
                     {
-                       char *s_aux;
+                       char s_aux[30];
                        simb *simb_aux = ts_busca(TS, proc_atual);
 
                        sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
@@ -302,17 +306,18 @@ declara_procedimento:
                     }
 ;
 
-chama_proc: IDENT 
+chama_proc: PONTO_E_VIRGULA
             {
-                char *s_aux;
-                simb *simb_aux = ts_busca(TS, token);
+                char s_aux[30];
+                simb *simb_aux = ts_busca(TS, ident_aux);
                 // busca na tabela
                 // empilha parametros
 
                 sprintf(s_aux, "CHPR R%d, %d", simb_aux->rotulo, nivel_lexico);
+                geraCodigo(NULL, s_aux);
+            
                 // CHPR R01, k
             }
-            PONTO_E_VIRGULA
 ;
 
 %%
