@@ -12,6 +12,12 @@ typedef enum
 
 typedef enum
 {
+    referencia,
+    valor
+} modo_param_t;
+
+typedef enum
+{
     VS,
     PROC,
     FUNC,
@@ -29,6 +35,8 @@ typedef struct simb {
 
   int rotulo;
   int num_param;
+  int *param;
+  int tam_param;
 
 } simb; 
 
@@ -44,6 +52,8 @@ void print_simb(void *s);
 void print_tabela(tabela_de_simbolos *t);
 void ts_insere_vs(tabela_de_simbolos *t, char *ident, int nivel_lexico, int deslocamento);
 void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int rotulo);
+void ts_add_param(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo);
+
 simb *ts_busca(tabela_de_simbolos *t, char *ident);
 void ts_retira(tabela_de_simbolos *t, int n);
 void ts_insere_tipo(tabela_de_simbolos *t, int n, tipo_t tipo);

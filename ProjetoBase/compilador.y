@@ -24,6 +24,7 @@ int rot_id;
 int init_rot;
 
 char ident_aux[100], proc_atual[100];
+int modo_param_aux;
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
@@ -293,6 +294,7 @@ declara_procedimento:
 
                         sprintf(proc_atual, "%s", token);
                     }
+                    lista_param
                     PONTO_E_VIRGULA
                     bloco
                     {
@@ -305,6 +307,26 @@ declara_procedimento:
                        nivel_lexico -= 1;
                     }
 ;
+
+lista_param: |
+            ABRE_PARENTESES params FECHA_PARENTESES;
+
+params: param | param VIRGULA params;
+
+param: modo IDENT DOIS_PONTOS tipo
+        {
+            ts_add_param(TS, proc_atual, modo_param_aux, string2type(token));
+        }
+;
+
+modo: var 
+        {
+            modo_param_aux = referencia;
+        }
+      | 
+        {
+            modo_param_aux = valor;
+        };
 
 chama_proc: PONTO_E_VIRGULA
             {
