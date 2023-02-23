@@ -4,9 +4,21 @@
 alteração;
     O que deu certo e o que teve de ser modificado no trajeto?
 
+Com o forward o problema que aparece é o compilador inserir o procedimento duas 
+vezes na tabela de simbolos: uma no forward e outra quando estivesse sendo de fato declarado.
+Então a ideia original é, ao analisar uma declaração de procedimento,
+em vez de inserir na tabela de simbolos direto, primeiro buscar na tabela se 
+o procedimento já não existe. Marcar o caso com uma flag (usamos NAO_DECLARADO) 
+para saber se é necessario rodar os códigos associados ao processamento da assinatura.
+
+Além disso fazer o compilador identificar a palavra 'forward', reconhecê-la para
+não rodar código relacionado ao inicio de uma declaracao de procedimento (DVSV e ENPR)
+
 
 ## Quais foram os trechos do código que foram
 alterados?
+- adicionado simb_forward no compilador.l e compilador.h
+- adicionado FORWARD no %token no topo do compilador.y
 
 
 ## Quais os maiores problemas para fazer funcionar?
