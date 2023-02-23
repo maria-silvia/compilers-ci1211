@@ -17,6 +17,7 @@ tipo_t string2type (char *s) {
 int gera_codigo_com_endereco(tabela_de_simbolos *TS, char *comando, char *aux_ident) {
 
     simb *s = ts_busca(TS, aux_ident);
+    printf("%s\n", aux_ident);
 
     if (s != NULL) {
         char aux_s[20];
