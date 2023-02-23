@@ -1,0 +1,8 @@
+# Parte 3: Questionário
+
+Nossas principais dificuldades ao longo do desenvolvimento:
+
+- Inicialmente entender como o bison funciona e onde inserir os códigos em c
+- Entender como usar o 'token' para pegar a string sendo analisada
+- Diferenciar tempo de execucão do tempo de compilação
+- 
