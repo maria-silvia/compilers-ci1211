@@ -10,3 +10,6 @@
         ENPR 1
 em vez de:
     R01:ENPR 1      
+
+- o rótulo R00 é gerado por padrão para ser colocado no inicio do programa principal. 
+Entao pode ter um shift no id dos rotulos em alguns testes. 
