@@ -1,0 +1,12 @@
+# Parte 2: Modificação do programa.
+
+## Descreva a idéia original para abordar a
+alteração;
+    O que deu certo e o que teve de ser modificado no trajeto?
+
+
+## Quais foram os trechos do código que foram
+alterados?
+
+
+## Quais os maiores problemas para fazer funcionar?
