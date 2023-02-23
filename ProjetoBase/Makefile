@@ -39,4 +39,4 @@ utils.o : utils.h utils.c
 
 clean :
 	rm -f compilador.tab.* lex.yy.c ;
-	rm -f compilador.o compilador compilador.output ;
+	rm -f compilador.o compilador compilador.output *.o;
