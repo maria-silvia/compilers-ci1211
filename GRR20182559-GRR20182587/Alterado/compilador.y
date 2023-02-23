@@ -26,7 +26,7 @@ int rot_id, proc_rot;
 int init_rot;
 simb *simb_atual;
 
-char ident_aux[100], ident_aux_2[100];
+char ident_aux[100], ident_var_ou_func[100];
 char proc_atual[100];
 int modo_param_aux;
 %}
@@ -82,7 +82,8 @@ bloco       :
 
 subrotinas_opcional: subrotinas | ;
 subrotinas: subrotinas subrotina | subrotina;
-subrotina: procedimento | funcao;
+subrotina: procedimento { print_tabela(TS); } 
+          | funcao { print_tabela(TS); };
 
 parte_declara_vars:  var
 ;
@@ -273,8 +274,8 @@ termo: fator
       | termo AND fator {geraCodigo(NULL, "CONJ");}
 ;
 
-fator:
-      var_or_func
+fator: 
+      variavel_ou_chamada_de_funcao
       | NUMERO 
       { 
          char crctnum[10] = "CRCT ";
@@ -285,26 +286,21 @@ fator:
       | NOT fator {geraCodigo(NULL, "NEGA");}
 ;
 
-
-
-
-
-var_or_func:
+variavel_ou_chamada_de_funcao:
       IDENT 
-            {
-               strncpy(ident_aux_2, token, 100);
-            //    strcat(ident_aux_2, proc_atual); // TIRAR --------------------
-            }
-      var_or_func_c
+      {
+        strncpy(ident_var_ou_func, token, 100);
+      }
+      variavel_ou_chamada_de_funcao2
 ;
-var_or_func_c:
+variavel_ou_chamada_de_funcao2:
       {
         geraCodigo(NULL, "AMEM 1");
       }
       assinatura
       |
       {
-        gera_codigo_com_endereco(TS, "CRVL", ident_aux_2);
+        gera_codigo_com_endereco(TS, "CRVL", ident_var_ou_func);
       }
 ;
 
@@ -345,7 +341,6 @@ declara_assinatura:
                             // ts_insere_proc(TS, token, nivel_lexico, proc_rot);
                     }
                     lista_param
-                    PONTO_E_VIRGULA
 ;
 
 fim_procedimento:
@@ -365,49 +360,53 @@ fim_procedimento:
                     }
 ;
 
-lista_param: |
-            ABRE_PARENTESES params FECHA_PARENTESES
+lista_param:ABRE_PARENTESES parametros FECHA_PARENTESES
             {
                 // if (simb_atual != NULL) {
                     ts_atualiza_desloc_params(TS, proc_atual);
                 // }
             }
+            |
 ;
 
-params: param | param PONTO_E_VIRGULA params;
-
-param: modo
-        {
-            num_vars = 0;
-        }
-        arguments DOIS_PONTOS tipo
-        {
-            // if (simb_atual == NULL) {
-                ts_insere_tipo(TS, num_vars, string2type(token));
-                ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
-            // }
-        }
+parametros: parametros PONTO_E_VIRGULA conjunto_de_parametros 
+            | conjunto_de_parametros
 ;
 
-arguments: argument | arguments VIRGULA argument
+conjunto_de_parametros: var_ou_nao
+                        {
+                            num_vars = 0;
+                        }
+                        arguments DOIS_PONTOS tipo
+                        {
+                            // if (simb_atual == NULL) {
+                                ts_insere_tipo(TS, num_vars, string2type(token));
+                                ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
+                            // }
+                        }
+;
+
+arguments: arguments VIRGULA argument | argument;
 
 argument: IDENT 
         {
             // if (simb_atual == NULL) {
-                strcat(token, proc_atual);
+                // strcat(token, proc_atual);
                 ts_insere_pf(TS, token, nivel_lexico);
                 num_vars++;
             // }
         }
+;
 
-modo: VAR 
+var_ou_nao: VAR 
         {
             modo_param_aux = referencia;
         }
       | 
         {
             modo_param_aux = valor;
-        };
+        }
+;
 
 chama_procedimento: assinatura PONTO_E_VIRGULA;
 
