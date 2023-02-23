@@ -4,3 +4,9 @@
 ## Problemas que o professor deveria saber:
 
 - É preciso colocar ; no final dos comands se não o compilador da syntax error
+
+- Para procedimentos, o compilador por praticidade de implementacao faz
+    R01: NADA 
+        ENPR 1
+em vez de:
+    R01:ENPR 1      
