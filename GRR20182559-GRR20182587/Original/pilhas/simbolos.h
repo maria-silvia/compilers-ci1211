@@ -56,6 +56,7 @@ void ts_insere_proc(tabela_de_simbolos *t, char *ident, int nivel_lexico, int ro
 void ts_atualiza_desloc_params(tabela_de_simbolos *t, char *ident);
 
 void ts_add_params(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t tipo, int n);
+void ts_add_func_type(tabela_de_simbolos *t, char *ident, tipo_t tipo);
 
 simb *ts_busca(tabela_de_simbolos *t, char *ident);
 void ts_retira(tabela_de_simbolos *t, int n);

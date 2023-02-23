@@ -92,6 +92,17 @@ void ts_add_params(tabela_de_simbolos *t, char *ident, modo_param_t mp, tipo_t t
     }
 }
 
+void ts_add_func_type(tabela_de_simbolos *t, char *ident, tipo_t tipo) {
+
+    simb *func = (simb *)search(t->s, igual_ident, (void *)ident);
+
+    func->cat = FUNC;
+    func->tipo = tipo;
+
+    func->deslocamento = -4 - func->num_param; 
+}
+
+
 void ts_atualiza_desloc_params(tabela_de_simbolos *t, char *ident) {
     simb *proc = (simb *)search(t->s, igual_ident, (void *)ident);
 

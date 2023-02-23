@@ -25,7 +25,7 @@ pilha_de_deslocs *PD;
 int rot_id;
 int init_rot;
 
-char ident_aux[100], proc_atual[100];
+char ident_aux[100], ident_aux_2[100], proc_atual[100];
 int modo_param_aux;
 %}
 
@@ -270,11 +270,7 @@ termo: fator
 ;
 
 fator:
-      IDENT
-      { 
-        gera_codigo_com_endereco(TS, "CRVL", token);
-
-      }
+      var_or_func
       | NUMERO 
       { 
          char crctnum[10] = "CRCT ";
@@ -284,12 +280,33 @@ fator:
       | ABRE_PARENTESES expressao FECHA_PARENTESES
       | NOT fator {geraCodigo(NULL, "NEGA");}
 ;
-
-
-subrotinas: declara_procedimento
+var_or_func:
+      IDENT 
+            {
+               strncpy(ident_aux_2, token, 100);
+            }
+      var_or_func_c
 ;
-declara_procedimento:   
-                    PROCEDURE
+var_or_func_c:
+      {
+        geraCodigo(NULL, "AMEM 1");
+        
+      }
+      assinatura
+      |
+      {
+        gera_codigo_com_endereco(TS, "CRVL", ident_aux_2);
+
+      }
+
+subrotinas: PROCEDURE declara_assinatura PONTO_E_VIRGULA termina_proc
+            | FUNCTION declara_assinatura DOIS_PONTOS tipo
+            {
+                ts_add_func_type(TS, proc_atual, string2type(token));
+            }
+            PONTO_E_VIRGULA termina_proc
+;
+declara_assinatura:   
                     IDENT 
                     {
                         int aux_id = gera_rotulos(PR);
@@ -304,7 +321,9 @@ declara_procedimento:
                         sprintf(proc_atual, "%s", token);
                     }
                     lista_param
-                    PONTO_E_VIRGULA
+;
+
+termina_proc:
                     bloco
                     {
                         char s_aux[30];
@@ -355,14 +374,16 @@ modo: VAR
             modo_param_aux = valor;
         };
 
-chama_proc: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc | vai_para_proc;
+chama_proc: assinatura PONTO_E_VIRGULA
+            | vai_para_proc PONTO_E_VIRGULA;
+
+assinatura: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc;
 
 chama_params: chama_params VIRGULA expressao 
             | expressao
 ;
 
 vai_para_proc: 
-            PONTO_E_VIRGULA
             {
                 char s_aux[30];
                 simb *simb_aux = ts_busca(TS, ident_aux);
