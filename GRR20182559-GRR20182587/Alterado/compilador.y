@@ -81,10 +81,11 @@ bloco       :
 ;
 
 subrotinas_opcional: subrotinas | ;
+subrotinas: subrotinas subrotina | subrotina;
+subrotina: procedimento | funcao;
 
 parte_declara_vars:  var
 ;
-
 
 var         : { } VAR
                     {
@@ -150,7 +151,7 @@ comando_sem_rotulo: ident_first
                   | cmd_repetitivo
                   | cmd_condicional
                   | cmd_read | cmd_write
-                  | chama_proc
+                  | chama_procedimento
 ;
 
 ident_first: IDENT 
@@ -160,11 +161,11 @@ ident_first: IDENT
             ident_continue
 ;
 
-ident_continue: ATRIBUICAO atribuicao_c | chama_proc;
+ident_continue: atribuicao | chama_procedimento;
 
-atribuicao_c:  expressao PONTO_E_VIRGULA 
+atribuicao: ATRIBUICAO expressao PONTO_E_VIRGULA 
             {
-                strcat(ident_aux, proc_atual);
+                // strcat(ident_aux, proc_atual);
                 gera_codigo_com_endereco(TS, "ARMZ", ident_aux);
             }
 ;
@@ -299,27 +300,29 @@ var_or_func:
 var_or_func_c:
       {
         geraCodigo(NULL, "AMEM 1");
-        
       }
       assinatura
       |
       {
         gera_codigo_com_endereco(TS, "CRVL", ident_aux_2);
-
       }
-
-subrotinas: subrotinas subrotina | subrotina;
-
+;
 
 
 
 
-subrotina: PROCEDURE declara_assinatura PONTO_E_VIRGULA termina_proc
-            | FUNCTION declara_assinatura DOIS_PONTOS tipo
-            {
-                ts_add_func_type(TS, proc_atual, string2type(token));
-            }
-            PONTO_E_VIRGULA termina_proc
+procedimento: PROCEDURE declara_assinatura PONTO_E_VIRGULA 
+              bloco
+              fim_procedimento
+;
+
+funcao: FUNCTION declara_assinatura DOIS_PONTOS tipo
+        {
+          ts_add_func_type(TS, proc_atual, string2type(token));
+        }
+        PONTO_E_VIRGULA 
+        bloco
+        fim_procedimento
 ;
 
 declara_assinatura:   
@@ -345,7 +348,7 @@ declara_assinatura:
                     PONTO_E_VIRGULA
 ;
 
-termina_proc:
+fim_procedimento:
                 // FORWARD PONTO_E_VIRGULA
                 // | 
                 //     {
@@ -354,14 +357,8 @@ termina_proc:
                 //         gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
             
                 //     }
-                    bloco
                     {
-                        char s_aux[30];
-                        simb *simb_aux = ts_busca(TS, proc_atual);
-
-                        sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
-
-                        geraCodigo(NULL, s_aux);
+                        gera_codigo_retorna_do_procedimento(TS, proc_atual, nivel_lexico);
                         nivel_lexico -= 1;
                         desloc = pop_desloc(PD);
                         // sprintf(proc_atual, "");
@@ -412,7 +409,7 @@ modo: VAR
             modo_param_aux = valor;
         };
 
-chama_proc: assinatura PONTO_E_VIRGULA;
+chama_procedimento: assinatura PONTO_E_VIRGULA;
 
 assinatura: ABRE_PARENTESES chama_params FECHA_PARENTESES 
           { gera_codigo_chama_procedimento(TS, ident_aux, nivel_lexico); }

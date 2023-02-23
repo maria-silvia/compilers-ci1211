@@ -75,3 +75,16 @@ void gera_codigo_chama_procedimento(tabela_de_simbolos *TS, char *procedimento, 
     sprintf(codigo, "CHPR R%d, %d", proc->rotulo, k);
     geraCodigo(NULL, codigo);
 }
+
+/*
+   gera string do tipo 
+    "RTPR k, n"
+    k nivel lexico
+    n numero de parametros
+*/
+void gera_codigo_retorna_do_procedimento(tabela_de_simbolos *TS, char *procedimento, int k) {
+    char codigo[30];
+    simb *proc = ts_busca(TS, procedimento);
+    sprintf(codigo, "RTPR %d, %d", k, proc->num_param);
+    geraCodigo(NULL, codigo);
+}
