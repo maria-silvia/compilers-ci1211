@@ -17,7 +17,7 @@ tipo_t string2type (char *s) {
 int gera_codigo_com_endereco(tabela_de_simbolos *TS, char *comando, char *aux_ident) {
 
     simb *s = ts_busca(TS, aux_ident);
-    printf("%s\n", aux_ident);
+    // printf("%s\n", aux_ident);
 
     if (s != NULL) {
         char aux_s[20];
@@ -63,4 +63,15 @@ void gera_codigo_cmd_e_numero(char *comando, int num) {
     char codigo[10];
     sprintf(codigo, "%s %d", comando, num);
     geraCodigo(NULL, codigo); 
+}
+
+/*
+    busca o rótulo do procedimento e gera string do tipo 
+    "CHPR R0x, k"
+*/
+void gera_codigo_chama_procedimento(tabela_de_simbolos *TS, char *procedimento, int k) {
+    char codigo[30];
+    simb *proc = ts_busca(TS, procedimento);
+    sprintf(codigo, "CHPR R%d, %d", proc->rotulo, k);
+    geraCodigo(NULL, codigo);
 }
