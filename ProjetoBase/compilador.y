@@ -199,7 +199,7 @@ if_then     : IF expressao
                rot_id = gera_rotulos(PR);
                gera_codigo_desvia_pra_rotulo("DSVF", rot_id);
             }
-             THEN comando_sem_rotulo
+             THEN sub_bloco_ou_nao
             {
               // em_if_apos_then ();
 
@@ -212,8 +212,11 @@ cond_else   : ELSE {
                int rot_do_else = pop_rot(PR);
                push_rot(PR, rot_do_fim);
                gera_codigo_rotulo_faz_nada(rot_do_else);    
-            } comando_sem_rotulo
+            } sub_bloco_ou_nao
             | %prec LOWER_THAN_ELSE
+;
+
+sub_bloco_ou_nao: comando_sem_rotulo | comando_composto
 ;
 
 cmd_read    : READ ABRE_PARENTESES read_idents FECHA_PARENTESES PONTO_E_VIRGULA 
@@ -322,7 +325,7 @@ lista_param: |
             }
 ;
 
-params: param | param VIRGULA params;
+params: param | param PONTO_E_VIRGULA params;
 
 param: modo
         {
