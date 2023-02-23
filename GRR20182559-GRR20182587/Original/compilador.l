@@ -48,7 +48,7 @@ comentario "(*".*"*)"
 
 {comentario}
 
-program { simbolo  = simb_program;
+(?i:program) { simbolo  = simb_program;
           strncpy (token, yytext, TAM_TOKEN);
           IMPRIME("program ");
           return PROGRAM;
