@@ -12,17 +12,21 @@
 #include "compilador.h"
 #include "pilhas/simbolos.h"
 #include "pilhas/rotulos.h"
+#include "pilhas/desloc.h"
 
 int num_vars;
 int nivel_lexico;
 int desloc;
 
-char _atribuicao[20];
-
 tabela_de_simbolos *TS;
 pilha_de_rotulos *PR;
+pilha_de_deslocs *PD;
 
 int rot_id;
+int init_rot;
+
+char ident_aux[100], proc_atual[100];
+int modo_param_aux;
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
@@ -44,6 +48,8 @@ int rot_id;
 programa    :{
                nivel_lexico = 0;
                geraCodigo (NULL, "INPP");
+
+               init_rot = gera_rotulos(PR);
              }
              PROGRAM IDENT
              ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
@@ -60,7 +66,9 @@ bloco       :
               parte_declara_vars
               subrotinas_opcional
               {
-               print_tabela(TS);
+                print_tabela(TS);
+                if (nivel_lexico == 0)
+                  gera_codigo_rotulo_faz_nada(init_rot);
               }
               comando_composto
               {
@@ -76,7 +84,11 @@ parte_declara_vars:  var
 ;
 
 
-var         : { } VAR declara_vars
+var         : { } VAR
+                    {
+                        num_vars=0;
+                    }
+            declara_vars
             |
 ;
 
@@ -90,7 +102,6 @@ declara_var : { }
               { 
                   ts_insere_tipo(TS, num_vars, string2type(token));
                   gera_codigo_cmd_e_numero("AMEM", num_vars);
-                  num_vars=0;
               }
               PONTO_E_VIRGULA
 ;
@@ -101,14 +112,14 @@ tipo        : IDENT
 lista_id_var: lista_id_var VIRGULA IDENT
               { 
                /* insere �ltima vars na tabela de s�mbolos */ 
-               ts_insere(TS, token, VS, nivel_lexico, desloc);
+               ts_insere_vs(TS, token, nivel_lexico, desloc);
                num_vars++;
                desloc++;
               }
             | IDENT 
             {
                /* insere vars na tabela de s�mbolos */
-               ts_insere(TS, token, VS, nivel_lexico, desloc);
+               ts_insere_vs(TS, token, nivel_lexico, desloc);
                num_vars++;
                desloc++;
             }
@@ -133,20 +144,25 @@ comando: comando_sem_rotulo
         |
 ;
 
-comando_sem_rotulo: atribuicao
+comando_sem_rotulo: ident_first
                   | cmd_repetitivo
                   | cmd_condicional
                   | cmd_read | cmd_write
                   | chama_proc
 ;
 
-atribuicao: IDENT 
+ident_first: IDENT 
             {
-               strncpy(_atribuicao, token, 20);
-            } 
-            ATRIBUICAO expressao PONTO_E_VIRGULA 
+               strncpy(ident_aux, token, 100);
+            }
+            ident_continue
+;
+
+ident_continue: ATRIBUICAO atribuicao_c | chama_proc;
+
+atribuicao_c:  expressao PONTO_E_VIRGULA 
             {
-                gera_codigo_com_endereco(TS, "ARMZ", _atribuicao);
+                gera_codigo_com_endereco(TS, "ARMZ", ident_aux);
             }
 ;
 
@@ -183,7 +199,7 @@ if_then     : IF expressao
                rot_id = gera_rotulos(PR);
                gera_codigo_desvia_pra_rotulo("DSVF", rot_id);
             }
-             THEN comando_sem_rotulo
+             THEN sub_bloco_ou_nao
             {
               // em_if_apos_then ();
 
@@ -196,8 +212,11 @@ cond_else   : ELSE {
                int rot_do_else = pop_rot(PR);
                push_rot(PR, rot_do_fim);
                gera_codigo_rotulo_faz_nada(rot_do_else);    
-            } comando_sem_rotulo
+            } sub_bloco_ou_nao
             | %prec LOWER_THAN_ELSE
+;
+
+sub_bloco_ou_nao: comando_sem_rotulo | comando_composto
 ;
 
 cmd_read    : READ ABRE_PARENTESES read_idents FECHA_PARENTESES PONTO_E_VIRGULA 
@@ -271,24 +290,90 @@ subrotinas: declara_procedimento
 ;
 declara_procedimento:   
                     PROCEDURE
-                    IDENT PONTO_E_VIRGULA
+                    IDENT 
                     {
-                        // DSVS R00
-                        // R00: ENPR k
+                        int aux_id = gera_rotulos(PR);
+                        nivel_lexico += 1;
+                        push_desloc(PD, desloc);                        
+
+                        ts_insere_proc(TS, token, nivel_lexico, aux_id);
+                        gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
+                        gera_codigo_rotulo_faz_nada(aux_id);
+                        gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
+
+                        sprintf(proc_atual, "%s", token);
                     }
-                     bloco
-                     {
-                        // RTPR k, n
-                     }
+                    lista_param
+                    PONTO_E_VIRGULA
+                    bloco
+                    {
+                        char s_aux[30];
+                        simb *simb_aux = ts_busca(TS, proc_atual);
+
+                        sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
+
+                        geraCodigo(NULL, s_aux);
+                        nivel_lexico -= 1;
+                        desloc = pop_desloc(PD);
+                    }
 ;
 
-chama_proc: IDENT 
-            { 
+lista_param: |
+            ABRE_PARENTESES params FECHA_PARENTESES
+            {
+               ts_atualiza_desloc_params(TS, proc_atual);
+            }
+;
+
+params: param | param PONTO_E_VIRGULA params;
+
+param: modo
+        {
+            num_vars = 0;
+        }
+        arguments DOIS_PONTOS tipo
+        {
+            ts_insere_tipo(TS, num_vars, string2type(token));
+            ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
+        }
+;
+
+arguments: argument | arguments VIRGULA argument
+
+argument: IDENT 
+        {
+            ts_insere_pf(TS, token, nivel_lexico);
+            num_vars++;
+        }
+
+modo: VAR 
+        {
+            modo_param_aux = referencia;
+        }
+      | 
+        {
+            modo_param_aux = valor;
+        };
+
+chama_proc: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc | vai_para_proc;
+
+chama_params: chama_params VIRGULA expressao 
+            | expressao
+;
+
+vai_para_proc: 
+            PONTO_E_VIRGULA
+            {
+                char s_aux[30];
+                simb *simb_aux = ts_busca(TS, ident_aux);
                 // busca na tabela
                 // empilha parametros
+
+                sprintf(s_aux, "CHPR R%d, %d", simb_aux->rotulo, nivel_lexico);
+                geraCodigo(NULL, s_aux);
+            
                 // CHPR R01, k
             }
-            PONTO_E_VIRGULA
 ;
 
 %%
@@ -319,6 +404,7 @@ int main (int argc, char** argv) {
  * ------------------------------------------------------------------- */
    TS = init_tabela();
    PR = init_rotulos();
+   PD = init_deslocs();
    yyin=fp;
    yyparse();
 
