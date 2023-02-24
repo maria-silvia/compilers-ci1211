@@ -1,8 +1,4 @@
 
-// Testar se funciona corretamente o empilhamento de par�metros
-// passados por valor ou por refer�ncia.
-
-
 %{
 #include <stdio.h>
 #include <ctype.h>
@@ -24,7 +20,7 @@ pilha_de_deslocs *PD;
 
 int rot_id, proc_rot;
 int init_rot;
-simb *simb_atual;
+int ROTINA_INEDITA;
 
 char ident_aux[100], ident_var_ou_func[100];
 char proc_atual[100];
@@ -82,8 +78,6 @@ bloco       :
 
 subrotinas_opcional: subrotinas | ;
 subrotinas: subrotinas subrotina | subrotina;
-subrotina: procedimento { print_tabela(TS); } 
-          | funcao { print_tabela(TS); };
 
 parte_declara_vars:  var
 ;
@@ -166,7 +160,6 @@ ident_continue: atribuicao | chama_procedimento;
 
 atribuicao: ATRIBUICAO expressao PONTO_E_VIRGULA 
             {
-                // strcat(ident_aux, proc_atual);
                 gera_codigo_com_endereco(TS, "ARMZ", ident_aux);
             }
 ;
@@ -305,11 +298,21 @@ variavel_ou_chamada_de_funcao2:
 ;
 
 
-
+subrotina: 
+          {
+            nivel_lexico += 1;
+            push_desloc(PD, desloc);                        
+          }
+          proc_ou_funcao
+         {
+            nivel_lexico -= 1;
+            // desloc = pop_desloc(PD);
+          } 
+;
+proc_ou_funcao: procedimento | funcao; 
 
 procedimento: PROCEDURE declara_assinatura PONTO_E_VIRGULA 
-              bloco
-              fim_procedimento
+              forward_ou_corpo_rotina
 ;
 
 funcao: FUNCTION declara_assinatura DOIS_PONTOS tipo
@@ -317,84 +320,90 @@ funcao: FUNCTION declara_assinatura DOIS_PONTOS tipo
           ts_add_func_type(TS, proc_atual, string2type(token));
         }
         PONTO_E_VIRGULA 
-        bloco
-        fim_procedimento
+        forward_ou_corpo_rotina
 ;
 
 declara_assinatura:   
-                    IDENT 
-                    {
-                        int aux_id = gera_rotulos(PR);
-                        nivel_lexico += 1;
-                        push_desloc(PD, desloc);                        
-                        
-                        ts_insere_proc(TS, token, nivel_lexico, aux_id);
-                        gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
-                        gera_codigo_rotulo_faz_nada(aux_id);
-                        gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
+        IDENT 
+        {
+            sprintf(proc_atual, "%s", token);
 
-                        sprintf(proc_atual, "%s", token);
-                        //  MODIFICACOES FORWARD
-                        // simb_atual = ts_busca(TS, proc_atual); // FLAG NAO DECLARADO
+            //  MODIFICACOES do FORWARD
+            simb* aux = ts_busca(TS, proc_atual);
+            if (aux == NULL)
+            {
+              ROTINA_INEDITA = 1;
+              printf("Rotina inedita\n");
+            }
+            else {
+              ROTINA_INEDITA = 0;
+              printf("Rotina repetida\n");
+            }
 
-                        // if (simb_atual == NULL)
-                            // ts_insere_proc(TS, token, nivel_lexico, proc_rot);
-                    }
-                    lista_param
+
+            if (ROTINA_INEDITA) {
+              int rotulo = gera_rotulos(PR);
+              ts_insere_proc(TS, token, nivel_lexico, rotulo);
+            }
+
+            print_tabela(TS);
+        }
+        lista_param 
+;
+
+forward_ou_corpo_rotina:
+            FORWARD PONTO_E_VIRGULA |
+            {
+                simb* proc = ts_busca(TS, proc_atual);
+                gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
+                gera_codigo_rotulo_faz_nada(proc->rotulo);
+                gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
+            }
+            bloco 
+            fim_procedimento
 ;
 
 fim_procedimento:
-                // FORWARD PONTO_E_VIRGULA
-                // | 
-                //     {
-                //         gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
-                //         gera_codigo_rotulo_faz_nada(proc_rot);
-                //         gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
-            
-                //     }
-                    {
-                        gera_codigo_retorna_do_procedimento(TS, proc_atual, nivel_lexico);
-                        nivel_lexico -= 1;
-                        desloc = pop_desloc(PD);
-                        // sprintf(proc_atual, "");
-                    }
+      {
+          gera_codigo_retorna_do_procedimento(TS, proc_atual, nivel_lexico);
+      }
 ;
 
 lista_param:ABRE_PARENTESES parametros FECHA_PARENTESES
             {
-                // if (simb_atual != NULL) {
+                if (ROTINA_INEDITA) {
                     ts_atualiza_desloc_params(TS, proc_atual);
-                // }
+                }
             }
-            |
 ;
 
 parametros: parametros PONTO_E_VIRGULA conjunto_de_parametros 
             | conjunto_de_parametros
+            |
 ;
 
-conjunto_de_parametros: var_ou_nao
-                        {
-                            num_vars = 0;
-                        }
-                        arguments DOIS_PONTOS tipo
-                        {
-                            // if (simb_atual == NULL) {
-                                ts_insere_tipo(TS, num_vars, string2type(token));
-                                ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
-                            // }
-                        }
+conjunto_de_parametros: 
+          var_ou_nao
+          {
+              num_vars = 0;
+          }
+          arguments DOIS_PONTOS tipo
+          {
+              if (ROTINA_INEDITA) {
+                  ts_insere_tipo(TS, num_vars, string2type(token));
+                  ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
+              }
+          }
 ;
 
 arguments: arguments VIRGULA argument | argument;
 
 argument: IDENT 
         {
-            // if (simb_atual == NULL) {
-                // strcat(token, proc_atual);
+            if (ROTINA_INEDITA) {
                 ts_insere_pf(TS, token, nivel_lexico);
                 num_vars++;
-            // }
+            }
         }
 ;
 
@@ -416,6 +425,7 @@ assinatura: ABRE_PARENTESES chama_params FECHA_PARENTESES
 
 chama_params: chama_params VIRGULA expressao 
             | expressao
+            |
 ;
 
 

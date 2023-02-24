@@ -2,23 +2,82 @@
 
 ## Descreva a idéia original para abordar a
 alteração;
-    O que deu certo e o que teve de ser modificado no trajeto?
 
 Com o forward o problema que aparece é o compilador inserir o procedimento duas 
 vezes na tabela de simbolos: uma no forward e outra quando estivesse sendo de fato declarado.
-Então a ideia original é, ao analisar uma declaração de procedimento,
-em vez de inserir na tabela de simbolos direto, primeiro buscar na tabela se 
-o procedimento já não existe. Marcar o caso com uma flag (usamos NAO_DECLARADO) 
-para saber se é necessario rodar os códigos associados ao processamento da assinatura.
+Então a alteração principal ideada é, ao analisar uma declaração de procedimento,
+em vez de inserir na tabela de simbolos direto, primeiro buscar na tabela e checar se 
+o procedimento já não existe. 
 
-Além disso fazer o compilador identificar a palavra 'forward', reconhecê-la para
-não rodar código relacionado ao inicio de uma declaracao de procedimento (DVSV e ENPR)
+Além disso é preciso fazer o compilador reconhecer a palavra 'forward' para
+não rodar código relacionado ao inicio de uma declaracao de procedimento.
 
-
+---
+### O que deu certo e o que teve de ser modificado no trajeto?
 ## Quais foram os trechos do código que foram
 alterados?
+
+
 - adicionado simb_forward no compilador.l e compilador.h
 - adicionado FORWARD no %token no topo do compilador.y
 
+Ao ler o ident do proc/funcao foi preciso setar uma flag IDENT_INEDITO
+usada para saber quando é necessario rodar os códigos certos.
+Na regra de declara_assinatura, foi adicionado:
+
+    simb* aux = ts_busca(TS, proc_atual); 
+    if (simb_atual == NULL)     // se nao achou na tabela
+        IDENT_INEDITO = 1;
+    else
+        IDENT_INEDITO = 0;
+
+E a geração de um rotulo para o procedimento e a insercao deste na tabela foi alterada para:
+    
+    if (IDENT_INEDITO) {
+        int rotulo = gera_rotulos(PR);
+        ts_insere_proc(TS, token, nivel_lexico, rotulo);
+    }
+
+Esse if também foi necessário em todas as regras de lista_params e derivadas para 
+não registrar os parametros de novo na tabela.
+
+---
+
+Além disso, a geracao dos codigos DVSV e ENPR era feita na regra declara_assinatura mas com FORWARD
+isso nao funcionava já que nem sempre que se analisa uma assinatura se esta iniciando 
+a traducao da rotina. Para isso movemos esse código para a nova regra forward_ou_corpo_rotina:
+
+   forward_ou_corpo_rotina:
+            FORWARD PONTO_E_VIRGULA |
+            {
+                simb* proc = ts_busca(TS, proc_atual);
+                gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
+                gera_codigo_rotulo_faz_nada(proc->rotulo);
+                gera_codigo_cmd_e_numero("ENPR", nivel_lexico);
+            }
+            bloco 
+            fim_procedimento
+    ;
+
+
+E esta regra é chamada nas regras procedimento e funcao, 
+que antes usavam direto o bloco e fim_procedimento:
+
+    procedimento: PROCEDURE declara_assinatura PONTO_E_VIRGULA 
+                bloco  --> trocada por nova regra
+                fim_procedimento  --> trocada por nova regra
+    ;
+
+    funcao: FUNCTION declara_assinatura DOIS_PONTOS tipo
+            PONTO_E_VIRGULA 
+            bloco  --> trocada por nova regra
+            fim_procedimento  --> trocada por nova regra
+    ;           
+
 
 ## Quais os maiores problemas para fazer funcionar?
+Foi difícil fazer as alteracões devido o tamanho do código. Na parte de procedimentos 
+e funções há muito código, muitas ações para serem reorganizadas.
+
+No forward1.pas a dificuldade foi identificar a qual rotina as variaveis
+num1 e num2 pertenciam já que não tinhamos registrado na tabela de simbolos informação suficiente.
