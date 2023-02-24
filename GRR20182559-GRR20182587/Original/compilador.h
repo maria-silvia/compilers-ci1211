@@ -18,7 +18,7 @@
 #define __COMPILADOR__
 
 
-#define TAM_TOKEN 16
+#define TAM_TOKEN 64
 
 typedef enum simbolos {
   simb_program, simb_var, simb_begin, simb_end,

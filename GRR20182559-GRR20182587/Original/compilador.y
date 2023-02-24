@@ -1,8 +1,4 @@
 
-// Testar se funciona corretamente o empilhamento de par�metros
-// passados por valor ou por refer�ncia.
-
-
 %{
 #include <stdio.h>
 #include <ctype.h>
@@ -22,16 +18,17 @@ tabela_de_simbolos *TS;
 pilha_de_rotulos *PR;
 pilha_de_deslocs *PD;
 
-int rot_id;
+int rot_id, proc_rot;
 int init_rot;
 
-char ident_aux[100], ident_aux_2[100], proc_atual[100];
+char ident_aux[100], ident_var_ou_func[100];
+char proc_atual[100];
 int modo_param_aux;
 %}
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES
 %token VIRGULA PONTO_E_VIRGULA DOIS_PONTOS PONTO
-%token T_BEGIN T_END VAR IDENT ATRIBUICAO
+%token T_BEGIN T_END VAR FORWARD IDENT ATRIBUICAO
 
 %token LABEL FOR PROCEDURE FUNCTION
 %token GOTO IF THEN ELSE WHILE DO OR ASTERISCO
@@ -79,10 +76,13 @@ bloco       :
 ;
 
 subrotinas_opcional: subrotinas | ;
+subrotinas: subrotinas subrotina | subrotina;
+subrotina: procedimento 
+          | funcao
+;
 
 parte_declara_vars:  var
 ;
-
 
 var         : { } VAR
                     {
@@ -148,7 +148,7 @@ comando_sem_rotulo: ident_first
                   | cmd_repetitivo
                   | cmd_condicional
                   | cmd_read | cmd_write
-                  | chama_proc
+                  | chama_procedimento
 ;
 
 ident_first: IDENT 
@@ -158,9 +158,9 @@ ident_first: IDENT
             ident_continue
 ;
 
-ident_continue: ATRIBUICAO atribuicao_c | chama_proc;
+ident_continue: atribuicao | chama_procedimento;
 
-atribuicao_c:  expressao PONTO_E_VIRGULA 
+atribuicao: ATRIBUICAO expressao PONTO_E_VIRGULA 
             {
                 gera_codigo_com_endereco(TS, "ARMZ", ident_aux);
             }
@@ -269,8 +269,8 @@ termo: fator
       | termo AND fator {geraCodigo(NULL, "CONJ");}
 ;
 
-fator:
-      var_or_func
+fator: 
+      variavel_ou_chamada_de_funcao
       | NUMERO 
       { 
          char crctnum[10] = "CRCT ";
@@ -280,39 +280,48 @@ fator:
       | ABRE_PARENTESES expressao FECHA_PARENTESES
       | NOT fator {geraCodigo(NULL, "NEGA");}
 ;
-var_or_func:
+
+variavel_ou_chamada_de_funcao:
       IDENT 
-            {
-               strncpy(ident_aux_2, token, 100);
-            }
-      var_or_func_c
+      {
+        strncpy(ident_var_ou_func, token, 100);
+      }
+      variavel_ou_chamada_de_funcao2
 ;
-var_or_func_c:
+variavel_ou_chamada_de_funcao2:
       {
         geraCodigo(NULL, "AMEM 1");
-        
       }
       assinatura
       |
       {
-        gera_codigo_com_endereco(TS, "CRVL", ident_aux_2);
-
+        gera_codigo_com_endereco(TS, "CRVL", ident_var_ou_func);
       }
-
-subrotinas: PROCEDURE declara_assinatura PONTO_E_VIRGULA termina_proc
-            | FUNCTION declara_assinatura DOIS_PONTOS tipo
-            {
-                ts_add_func_type(TS, proc_atual, string2type(token));
-            }
-            PONTO_E_VIRGULA termina_proc
 ;
+
+
+
+procedimento: PROCEDURE declara_assinatura PONTO_E_VIRGULA 
+              bloco
+              fim_procedimento
+;
+
+funcao: FUNCTION declara_assinatura DOIS_PONTOS tipo
+        {
+          ts_add_func_type(TS, proc_atual, string2type(token));
+        }
+        PONTO_E_VIRGULA 
+        bloco
+        fim_procedimento
+;
+
 declara_assinatura:   
                     IDENT 
                     {
                         int aux_id = gera_rotulos(PR);
                         nivel_lexico += 1;
                         push_desloc(PD, desloc);                        
-
+                        
                         ts_insere_proc(TS, token, nivel_lexico, aux_id);
                         gera_codigo_desvia_pra_rotulo("DSVS", init_rot);
                         gera_codigo_rotulo_faz_nada(aux_id);
@@ -323,79 +332,66 @@ declara_assinatura:
                     lista_param
 ;
 
-termina_proc:
-                    bloco
-                    {
-                        char s_aux[30];
-                        simb *simb_aux = ts_busca(TS, proc_atual);
-
-                        sprintf(s_aux, "RTPR %d, %d", nivel_lexico, simb_aux->num_param);
-
-                        geraCodigo(NULL, s_aux);
-                        nivel_lexico -= 1;
-                        desloc = pop_desloc(PD);
-                    }
+fim_procedimento:
+      {
+         gera_codigo_retorna_do_procedimento(TS, proc_atual, nivel_lexico);
+         nivel_lexico -= 1;
+         desloc = pop_desloc(PD);
+      }
 ;
 
-lista_param: |
-            ABRE_PARENTESES params FECHA_PARENTESES
+lista_param:ABRE_PARENTESES parametros FECHA_PARENTESES
             {
                ts_atualiza_desloc_params(TS, proc_atual);
             }
+            |
 ;
 
-params: param | param PONTO_E_VIRGULA params;
-
-param: modo
-        {
-            num_vars = 0;
-        }
-        arguments DOIS_PONTOS tipo
-        {
-            ts_insere_tipo(TS, num_vars, string2type(token));
-            ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
-        }
+parametros: parametros PONTO_E_VIRGULA conjunto_de_parametros 
+            | conjunto_de_parametros
+            |
 ;
 
-arguments: argument | arguments VIRGULA argument
+conjunto_de_parametros: var_ou_nao
+                        {
+                            num_vars = 0;
+                        }
+                        arguments DOIS_PONTOS tipo
+                        {
+                           ts_insere_tipo(TS, num_vars, string2type(token));
+                           ts_add_params(TS, proc_atual, modo_param_aux, string2type(token), num_vars);
+                        }
+;
+
+arguments: arguments VIRGULA argument | argument;
 
 argument: IDENT 
         {
             ts_insere_pf(TS, token, nivel_lexico);
             num_vars++;
         }
+;
 
-modo: VAR 
+var_ou_nao: VAR 
         {
             modo_param_aux = referencia;
         }
       | 
         {
             modo_param_aux = valor;
-        };
+        }
+;
 
-chama_proc: assinatura PONTO_E_VIRGULA
-            | vai_para_proc PONTO_E_VIRGULA;
+chama_procedimento: assinatura PONTO_E_VIRGULA;
 
-assinatura: ABRE_PARENTESES chama_params FECHA_PARENTESES vai_para_proc;
+assinatura: ABRE_PARENTESES chama_params FECHA_PARENTESES 
+          { gera_codigo_chama_procedimento(TS, ident_aux, nivel_lexico); }
+;
 
 chama_params: chama_params VIRGULA expressao 
             | expressao
 ;
 
-vai_para_proc: 
-            {
-                char s_aux[30];
-                simb *simb_aux = ts_busca(TS, ident_aux);
-                // busca na tabela
-                // empilha parametros
-
-                sprintf(s_aux, "CHPR R%d, %d", simb_aux->rotulo, nivel_lexico);
-                geraCodigo(NULL, s_aux);
-            
-                // CHPR R01, k
-            }
-;
 
 %%
 

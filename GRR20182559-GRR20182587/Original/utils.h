@@ -9,5 +9,7 @@ int gera_codigo_com_endereco(tabela_de_simbolos *TS, char *comando, char *aux_id
 void gera_codigo_rotulo_faz_nada(int rot_id);
 void gera_codigo_desvia_pra_rotulo(char *comando, int rot_id);
 void gera_codigo_cmd_e_numero(char *comando, int num);
+void gera_codigo_chama_procedimento(tabela_de_simbolos *TS, char *procedimento, int k);
+void gera_codigo_retorna_do_procedimento(tabela_de_simbolos *TS, char *procedimento, int k);
 
 #endif
